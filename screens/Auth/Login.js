@@ -1,8 +1,11 @@
-import React from "react";
+import React, {useState} from "react";
 import styled from "styled-components";
 import useInput from "../../hooks/useInput";
 import AuthInput from "../../components/AuthInput";
 import AuthButton from "../../components/AuthButton";
+import { TouchableWithoutFeedback, Keyboard, Alert } from "react-native";
+import { useMutation } from "react-apollo-hooks";
+import { LOG_IN } from "./AuthQueries";
 
 const View = styled.View`
   justify-content: center;
@@ -10,16 +13,60 @@ const View = styled.View`
   flex: 1;
 `;
 
-export default () => {
+export default ({navigation}) => {
   const emailInput = useInput("");
-  return(
-    <View >
-    <AuthInput
-        {...emailInput}
-        placeholder="Email"
-        keyboardType="email-address"
-      />
-    <AuthButton onPress={() => null} text="Log In" />
-  </View>
+  const [loading, setLoading] = useState(false);
+  const [requestSecretMutation] = useMutation(LOG_IN, {
+    variables: {
+      email: emailInput.value
+    }
+  });
+
+  const handleLogin =async () => {
+    const { value } = emailInput;
+    const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (value === "") {
+      return Alert.alert("이메일을 입력해 주세요");
+    } else if (!value.includes("@") || !value.includes(".")) {
+      return Alert.alert("이메일 형식이 아닙니다");
+    } else if (!emailRegex.test(value)) {
+      return Alert.alert("이메일 형식이 잘못되었습니다.");
+    }
+    //loading 시작 후 email check
+    try {
+      setLoading(true);
+      const {
+        data: { requestSecret }
+      } = await requestSecretMutation();
+      if (requestSecret) {
+        Alert.alert("Check your email");
+        navigation.navigate("Confirm");
+        return;
+      } else {
+        Alert.alert("Account not found");
+        navigation.navigate("Signup");
+      }
+    } catch (e) {
+      console.log(e);
+      Alert.alert("로그인 할수 없습니다");
+    } finally {
+      setLoading(false);
+    }
+
+  };
+  return (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View>
+        <AuthInput
+          {...emailInput}
+          placeholder="Email"
+          keyboardType="email-address"
+          returnKeyType="send"
+          onSubmitEditing={handleLogin}
+          autoCorrect={false}
+        />
+        <AuthButton loading={loading} onPress={handleLogin} text="Log In" />
+      </View>
+    </TouchableWithoutFeedback>
   )
 };
