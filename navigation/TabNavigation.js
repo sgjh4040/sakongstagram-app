@@ -3,7 +3,7 @@ import {View} from "react-native";
 import {createBottomTabNavigator} from 'react-navigation-tabs';
 import {createStackNavigator} from 'react-navigation-stack';
 import Home from "../screens/Tabs/Home";
-import Search from "../screens/Search";
+import Search from "../screens/Tabs/Search";
 import Notifications from "../screens/Notifications";
 import Profile from "../screens/Profile";
 import MessagesLink from "../components/messagesLink"
@@ -32,9 +32,7 @@ export default createBottomTabNavigator({
             }
         },
         검색: {
-            screen: stackFactory(Search, {
-                title: "검색"
-            }),
+            screen: stackFactory(Search),
             navigationOptions: {
                 tabBarIcon: ({focused}) => (
                     <NavIcon focused={focused} name={Platform.OS === "ios" ? "ios-search" : "md-search"}/>
@@ -84,6 +82,7 @@ export default createBottomTabNavigator({
         }
     },
     {
+        initialRouteName:"검색",
       tabBarOptions:{
         showLabel: false,
         tabStyle:{
