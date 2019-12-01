@@ -6,7 +6,7 @@ import { gql } from "apollo-boost";
 import { useQuery } from "react-apollo-hooks";
 import Loader from "../../../components/Loader"
 import SquarePhoto from "../../../components/SquarePhoto";
-
+import UserDetail from "../../UserDetail";
 
 export const SEARCH = gql`
   query search($term: String!) {

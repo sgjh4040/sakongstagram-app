@@ -12,6 +12,7 @@ import NavIcon from "../components/NavIcon";
 import Detail from "../screens/Detail";
 import styles from "../styles";
 import {stackStyles} from "./config";
+import UserDetail from "../screens/UserDetail";
 
 const stackFactory = (initialRoute, customConfig) =>
     createStackNavigator(
@@ -28,10 +29,18 @@ const stackFactory = (initialRoute, customConfig) =>
                     headerTintColor: styles.blackColor,
                     title: "Photo"
                 }
+            },
+            UserDetail:{
+                screen: UserDetail,
+                navigationOptions: ({ navigation }) => ({
+                    title: navigation.getParam("username")
+                })
             }
         },
         {
             defaultNavigationOptions: {
+                headerBackTitle: null,
+                headerTintColor: styles.blackColor,
                 headerStyle: {...stackStyles}
             }
         }
