@@ -45,6 +45,8 @@ export default function App() {
       // AsyncStorage.setItem('isLoggedIn','false');
       const isLoggedIn = await AsyncStorage.getItem("isLoggedIn");
       console.log('isLoggedIn',isLoggedIn);
+      const token = await AsyncStorage.getItem("jwt");
+      console.log('token',token);
 
       if(!isLoggedIn || isLoggedIn=== "false"){
         setIsLoggedIn(false);

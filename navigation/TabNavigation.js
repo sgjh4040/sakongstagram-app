@@ -5,19 +5,37 @@ import {createStackNavigator} from 'react-navigation-stack';
 import Home from "../screens/Tabs/Home";
 import Search from "../screens/Tabs/Search";
 import Notifications from "../screens/Notifications";
-import Profile from "../screens/Profile";
+import Profile from "../screens/Tabs/Profile";
 import MessagesLink from "../components/messagesLink"
 import {Platform} from "react-native";
 import NavIcon from "../components/NavIcon";
-
+import Detail from "../screens/Detail";
+import styles from "../styles";
+import {stackStyles} from "./config";
 
 const stackFactory = (initialRoute, customConfig) =>
-    createStackNavigator({
-        InitialRoute: {
-            screen: initialRoute,
-            navigationOptions: {...customConfig, headerStyle: {backgroundColor: "#EFEEEF"}}
+    createStackNavigator(
+        {
+            InitialRoute: {
+                screen: initialRoute,
+                navigationOptions: {
+                    ...customConfig
+                }
+            },
+            Detail: {
+                screen: Detail,
+                navigationOptions: {
+                    headerTintColor: styles.blackColor,
+                    title: "Photo"
+                }
+            }
+        },
+        {
+            defaultNavigationOptions: {
+                headerStyle: {...stackStyles}
+            }
         }
-    });
+    );
 
 export default createBottomTabNavigator({
         홈: {
@@ -32,7 +50,9 @@ export default createBottomTabNavigator({
             }
         },
         검색: {
-            screen: stackFactory(Search),
+            screen: stackFactory(Search, {
+                headerBackTitle: null
+            }),
             navigationOptions: {
                 tabBarIcon: ({focused}) => (
                     <NavIcon focused={focused} name={Platform.OS === "ios" ? "ios-search" : "md-search"}/>
@@ -82,12 +102,12 @@ export default createBottomTabNavigator({
         }
     },
     {
-        initialRouteName:"검색",
-      tabBarOptions:{
-        showLabel: false,
-        tabStyle:{
-          backgroundColor: "#EFEEEF"
+        initialRouteName: "검색",
+        tabBarOptions: {
+            showLabel: false,
+            tabStyle: {
+                backgroundColor: "#EFEEEF"
+            }
         }
-      }
     }
 );
