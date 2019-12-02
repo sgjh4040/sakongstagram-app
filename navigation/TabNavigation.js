@@ -13,6 +13,7 @@ import Detail from "../screens/Detail";
 import styles from "../styles";
 import {stackStyles} from "./config";
 import UserDetail from "../screens/UserDetail";
+import PhotoNavigation from "./PhotoNavigation";
 
 const stackFactory = (initialRoute, customConfig) =>
     createStackNavigator(
@@ -39,7 +40,7 @@ const stackFactory = (initialRoute, customConfig) =>
         },
         {
             defaultNavigationOptions: {
-                headerBackTitle: null,
+                // headerBackTitle: null,
                 headerTintColor: styles.blackColor,
                 headerStyle: {...stackStyles}
             }
@@ -60,7 +61,7 @@ export default createBottomTabNavigator({
         },
         검색: {
             screen: stackFactory(Search, {
-                headerBackTitle: null
+                // headerBackTitle: null
             }),
             navigationOptions: {
                 tabBarIcon: ({focused}) => (
@@ -69,10 +70,13 @@ export default createBottomTabNavigator({
             }
         },
         Add: {
-            screen: View,
+            screen:  stackFactory(PhotoNavigation, {
+                // headerBackTitle: null
+                headerShown: false
+            }),
             navigationOptions: {
-                tabBarOnPress: ({navigation}) =>
-                    navigation.navigate("PhotoNavigation"),
+                // tabBarOnPress: ({navigation}) =>
+                //     navigation.navigate("PhotoNavigation"),
                 tabBarIcon: ({focused}) => (
                     <NavIcon focused={focused} name={Platform.OS === "ios" ? "ios-add" : "md-add"}/>
                 )
@@ -111,7 +115,7 @@ export default createBottomTabNavigator({
         }
     },
     {
-        initialRouteName: "검색",
+        // initialRouteName: "검색",
         tabBarOptions: {
             showLabel: false,
             tabStyle: {
