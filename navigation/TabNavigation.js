@@ -70,13 +70,14 @@ export default createBottomTabNavigator({
             }
         },
         Add: {
-            screen:  stackFactory(PhotoNavigation, {
-                // headerBackTitle: null
-                headerShown: false
-            }),
+            screen: View,
+            // screen:  stackFactory(PhotoNavigation, {
+            //     // headerBackTitle: null
+            //  x   headerShown: false
+            // }),
             navigationOptions: {
-                // tabBarOnPress: ({navigation}) =>
-                //     navigation.navigate("PhotoNavigation"),
+                tabBarOnPress: ({navigation}) =>
+                    navigation.navigate("PhotoNavigation"),
                 tabBarIcon: ({focused}) => (
                     <NavIcon focused={focused} name={Platform.OS === "ios" ? "ios-add" : "md-add"}/>
                 )

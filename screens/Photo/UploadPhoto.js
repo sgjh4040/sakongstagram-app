@@ -65,7 +65,7 @@ export default ({navigation}) => {
     });
     const handleSubmit = async () =>{
         if(captionInput.value === "" || locationInput.value === ""){
-            Alert.alert("모두 작성해 주세")
+            Alert.alert("모두 작성해 주세요")
         }
         const formData = new FormData();
         const name = photo.filename;
@@ -95,6 +95,7 @@ export default ({navigation}) => {
                 }
             });
             if (upload.id) {
+                console.log("TabNav로")
                 navigation.navigate("TabNavigation");
             }
         } catch (e) {

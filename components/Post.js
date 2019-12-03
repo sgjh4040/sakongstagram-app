@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Image, Platform} from "react-native";
+import {Image, Platform, Alert} from "react-native";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 import Swiper from "react-native-swiper";
@@ -9,6 +9,10 @@ import {gql} from "apollo-boost";
 import styles from "../styles";
 import {useMutation} from "react-apollo-hooks";
 import {withNavigation} from "react-navigation";
+import useInput from "../hooks/useInput";
+import CommentInput from "./CommentInput";
+import AuthButton from "./AuthButton";
+import {CREATE_COMMENT} from "../screens/Auth/AuthQueries";
 
 export const TOGGLE_LIKE = gql`
     mutation toggleLike($postId: String!){
@@ -51,6 +55,9 @@ const CommentCount = styled.Text`
   opacity: 0.5;
   font-size: 13px;
 `;
+const Text = styled.Text`
+font-size: 12px;
+`;
 
 const Post = ({
                   id,
@@ -61,16 +68,38 @@ const Post = ({
                   caption,
                   comments = [],
                   isLiked: isLikedProp,
-                  navigation
+                  navigation,
+                  refetch
               }) => {
-
+    const commentInput = useInput("");
+    const [loading, setLoading] = useState(false);
     const [isLiked, setIsLiked] = useState(isLikedProp);
     const [likeCount, setLikeCount] = useState(likeCountProp);
+    const [createCommentMutation] = useMutation(CREATE_COMMENT,{
+        variables:{
+            text: commentInput.value,
+            postId: id
+        }
+    });
     const [toggleLikeMutaton] = useMutation(TOGGLE_LIKE, {
         variables: {
             postId: id
         }
     });
+    const handleComment= async () =>{
+        try{
+            setLoading(true);
+            const data = await createCommentMutation();
+            console.log("data",data);
+            Alert.alert("댓글","등록되었습니다.");
+            refetch();
+        }catch(e){
+            console.log(e)
+        }finally {
+            setLoading(false);
+
+        }
+    }
     const handleLike = async () => {
         if (isLiked === true) {
             setLikeCount(l => l - 1);
@@ -159,7 +188,17 @@ const Post = ({
                 <Touchable>
 
                     <CommentCount>See all {comments.length} comments</CommentCount>
+
                 </Touchable>
+                {comments.map(comment => (
+                    <Text key={comment.id}>{comment.text}</Text>
+                ))}
+                <CommentInput
+                    {...commentInput}
+                    placeholder="comment"
+                    autoCapitalize="words"
+                />
+                <AuthButton loading={loading} onPress={handleComment} text="등록" />
             </InfoContainer>
         </Container>
     );

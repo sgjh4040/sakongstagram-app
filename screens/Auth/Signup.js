@@ -84,7 +84,7 @@ export default ({navigation}) => {
                 />
                 <AuthInput
                     {...usernameInput}
-                    placeholder="닉네임ㅌ"
+                    placeholder="닉네임"
                     returnKeyType="send"
                     autoCorrect={false}
                 />

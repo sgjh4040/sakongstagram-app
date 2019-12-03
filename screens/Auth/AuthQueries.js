@@ -1,10 +1,18 @@
-import { gql } from "apollo-boost";
+import {gql} from "apollo-boost";
 
 export const LOG_IN = gql`
   mutation requestSecret($email: String!) {
     requestSecret(email: $email)
   }
 `;
+export const CREATE_COMMENT = gql`
+  mutation addComment($text:String!,$postId:String!){
+    addComment(text:$text, postId: $postId){
+        text
+ 
+    }
+  }
+`
 
 export const CREATE_ACCOUNT = gql`
   mutation createAccount(
