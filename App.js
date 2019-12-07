@@ -7,7 +7,7 @@ import { Asset } from 'expo-asset'
 import {AsyncStorage} from 'react-native';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { persistCache } from 'apollo-cache-persist';
-import ApolloClient from "apollo-boost";
+// import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "react-apollo-hooks";
 import apolloClientOptions from "./apollo";
 import styles from "./styles";
@@ -15,6 +15,49 @@ import { ThemeProvider } from "styled-components"
 import NavController from "./components/NavController"
 import {AuthProvider} from "./AuthContext"
 
+import { HttpLink } from 'apollo-link-http';
+import { WebSocketLink } from 'apollo-link-ws';
+import { ApolloClient } from 'apollo-client';
+import { createHttpLink } from 'apollo-link-http';
+import { setContext } from 'apollo-link-context';
+import { split } from 'apollo-link';
+import { getMainDefinition } from 'apollo-utilities';
+
+// Create an http link:
+const httpLink = new createHttpLink({
+  uri: 'http://localhost:4000'
+});
+
+// Create a WebSocket link:
+const wsLink = new WebSocketLink({
+  uri: `ws://localhost:4000`,
+  options: {
+    reconnect: true
+  }
+});
+const authLink = setContext(async (_, { headers }) => {
+  // get the authentication token from local storage if it exists
+  const token =await AsyncStorage.getItem('jwt');
+  // return the headers to the context so httpLink can read them
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : "",
+    }
+  }
+});
+const link = split(
+    // split based on operation type
+    ({ query }) => {
+      const definition = getMainDefinition(query);
+      return (
+          definition.kind === 'OperationDefinition' &&
+          definition.operation === 'subscription'
+      );
+    },
+    wsLink,
+    httpLink,
+);
 
 export default function App() {
   const [loaded, setLoaded] = useState(false);
@@ -33,14 +76,9 @@ export default function App() {
         storage: AsyncStorage,
       });
       const client = new ApolloClient({
+        link: authLink.concat(link),
         cache,
-        request: async operation => {
-          const token = await AsyncStorage.getItem("jwt");
-          return operation.setContext({
-            headers: { Authorization: `Bearer ${token}` }
-          });
-        },
-        ...apolloClientOptions
+
       });
       // AsyncStorage.setItem('isLoggedIn','false');
       const isLoggedIn = await AsyncStorage.getItem("isLoggedIn");

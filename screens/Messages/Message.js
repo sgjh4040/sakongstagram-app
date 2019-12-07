@@ -1,8 +1,12 @@
-import React from "react";
+import React, {useState, useMemo} from "react";
 import styled from "styled-components";
-import {gql} from "apollo-boost";
+import gql from "graphql-tag";
 import {useQuery} from "react-apollo-hooks";
-
+import {
+    ScrollView,
+    TextInput,
+    KeyboardAvoidingView
+} from "react-native";
 const SEE_ROOM = gql`
     query seeRoom($id:String!){
         seeRoom(id: $id){
