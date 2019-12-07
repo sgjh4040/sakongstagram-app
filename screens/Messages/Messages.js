@@ -3,13 +3,13 @@ import styled from "styled-components";
 import SearchBar from "../../components/SearchBar";
 import SearchPresenter from "../Tabs/Search/SearchPresenter";
 import MessagePresenter from "./MessagePresenter";
+import {gql} from "apollo-boost";
 
 const View = styled.View`
   justify-content: center;
   align-items: center;
   flex: 1;
 `;
-
 const Text = styled.Text``;
 
 export default  class extends React.Component{
