@@ -3,17 +3,17 @@ import styled from "styled-components";
 import SearchBar from "../../components/SearchBar";
 import SearchPresenter from "../Tabs/Search/SearchPresenter";
 import MessagePresenter from "./MessagePresenter";
+import {gql} from "apollo-boost";
+
 
 const View = styled.View`
-  justify-content: center;
-  align-items: center;
   flex: 1;
 `;
 
 const Text = styled.Text``;
 
-export default  class extends React.Component{
-    static navigationOptions = ({navigation})=>({
+export default class extends React.Component {
+    static navigationOptions = ({navigation}) => ({
         headerTitle: (
             <SearchBar
                 value={navigation.getParam("term", "")}
@@ -22,12 +22,13 @@ export default  class extends React.Component{
             />
         )
     });
-    constructor(props){
+
+    constructor(props) {
         super(props)
         const {navigation} = props;
-        this.state={
-            term:"",
-            shouldFetch:false
+        this.state = {
+            term: "",
+            shouldFetch: false
         };
         navigation.setParams({
             term: this.state.term,
@@ -35,18 +36,25 @@ export default  class extends React.Component{
             onSubmit: this.onSubmit
         })
     }
+
     onChange = text => {
         const {navigation} = this.props
-        this.setState({ term: text, shouldFetch: false });
+        this.setState({term: text, shouldFetch: false});
         navigation.setParams({
-            term:text
+            term: text
         });
     };
-    onSubmit= () => {
-        this.setState({ shouldFetch: true });
+    onSubmit = () => {
+        this.setState({shouldFetch: true});
     }
+
     render() {
-        const { term, shouldFetch } = this.state;
-        return <MessagePresenter term={term} shouldFetch={shouldFetch}/>
+        const {term, shouldFetch} = this.state;
+        return (
+            <View>
+                <MessagePresenter term={term} shouldFetch={shouldFetch}/>
+            </View>
+        )
+
     }
 }

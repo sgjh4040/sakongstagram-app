@@ -7,6 +7,7 @@ import Loader from "../../components/Loader";
 import UserListBox from "../../components/UserListBox";
 import styled from "styled-components";
 import SquarePhoto from "../../components/SquarePhoto";
+import RoomBox from "../../components/RoomBox";
 
 export const SEARCH = gql`
     query searchUser($term: String!){
@@ -18,10 +19,15 @@ export const SEARCH = gql`
         }
     }
 `;
+const ROOMS_QUERY = gql`
+    {
+        seeRooms{
+            id
+        }
+    }
+`;
 
 const View = styled.View`
-    justify-content: center;
-    align-items: center;
     flex: 1;
 
 `;
@@ -37,10 +43,11 @@ const MessagePresenter = ({term,shouldFetch})=>{
         skip: !shouldFetch,
         fetchPolicy: "network-only"
     });
-
+    const {data:roomdata} = useQuery(ROOMS_QUERY);
     return (
         <View>
             {(data && data.searchUser && data.searchUser.map(user=> <UserListBox key={user.id} {...user}/>))}
+            {roomdata.seeRooms.map(room => <RoomBox key={room.id} {...room}/>)}
         </View>
     )
 }

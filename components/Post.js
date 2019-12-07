@@ -90,7 +90,6 @@ const Post = ({
         try{
             setLoading(true);
             const data = await createCommentMutation();
-            console.log("data",data);
             Alert.alert("댓글","등록되었습니다.");
             refetch();
         }catch(e){

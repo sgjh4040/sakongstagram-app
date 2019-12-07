@@ -14,6 +14,7 @@ import styles from "../styles";
 import {stackStyles} from "./config";
 import UserDetail from "../screens/UserDetail";
 import PhotoNavigation from "./PhotoNavigation";
+import Message from "../screens/Messages/Message";
 
 const stackFactory = (initialRoute, customConfig) =>
     createStackNavigator(
@@ -36,6 +37,9 @@ const stackFactory = (initialRoute, customConfig) =>
                 navigationOptions: ({ navigation }) => ({
                     title: navigation.getParam("username")
                 })
+            },
+            MessageDetail:{
+                screen: Message
             }
         },
         {
