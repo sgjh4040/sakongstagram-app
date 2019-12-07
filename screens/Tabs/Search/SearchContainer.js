@@ -37,7 +37,7 @@ export default class extends React.Component {
         this.setState({ shouldFetch: true });
     }
     render() {
-        const { data, shouldFetch } = this.state;
+        const { term, shouldFetch } = this.state;
         return <SearchPresenter term={term} shouldFetch={shouldFetch} />;
     }
 }

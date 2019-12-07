@@ -1,11 +1,11 @@
 import React, {useState} from "react";
-import {Image, Platform, Alert} from "react-native";
+import {Image, Platform, Alert, AsyncStorage} from "react-native";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 import Swiper from "react-native-swiper";
 import constants from "../constants";
 import {Ionicons, MaterialCommunityIcons} from "@expo/vector-icons";
-import {gql} from "apollo-boost";
+import gql from "graphql-tag";
 import styles from "../styles";
 import {useMutation} from "react-apollo-hooks";
 import {withNavigation} from "react-navigation";
@@ -87,10 +87,10 @@ const Post = ({
         }
     });
     const handleComment= async () =>{
+        console.log("clickclick");
         try{
             setLoading(true);
             const data = await createCommentMutation();
-            console.log("data",data);
             Alert.alert("댓글","등록되었습니다.");
             refetch();
         }catch(e){

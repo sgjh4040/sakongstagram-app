@@ -28,7 +28,7 @@ const Text = styled.Text``;
 export default () => {
     const [refreshing, setRefreshing] = useState(false);
     const {loading, data, refetch} = useQuery(FEED_QUERY);
-    console.log(loading, data);
+    // console.log(loading, data);
     const refresh = async () => {
         try {
             setRefreshing(true);

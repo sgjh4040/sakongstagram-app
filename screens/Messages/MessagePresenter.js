@@ -1,7 +1,7 @@
 import React, {useState} from "react";
-import {} from "react-native";
+import {ScrollView} from "react-native";
 import PropTypes from "prop-types";
-import { gql } from "apollo-boost";
+import gql  from "graphql-tag";
 import { useQuery } from "react-apollo-hooks";
 import Loader from "../../components/Loader";
 import UserListBox from "../../components/UserListBox";
@@ -14,19 +14,12 @@ export const SEARCH = gql`
             id
             username
             avatar
+            bio
             
         }
     }
 `;
 
-const View = styled.View`
-    justify-content: center;
-    align-items: center;
-    flex: 1;
-
-`;
-
-const Text = styled.Text``;
 
 const MessagePresenter = ({term,shouldFetch})=>{
     const [refreshing, setRefreshing] = useState(false);
@@ -37,11 +30,12 @@ const MessagePresenter = ({term,shouldFetch})=>{
         skip: !shouldFetch,
         fetchPolicy: "network-only"
     });
+    console.log("data",data);
 
     return (
-        <View>
+        <ScrollView>
             {(data && data.searchUser && data.searchUser.map(user=> <UserListBox key={user.id} {...user}/>))}
-        </View>
+        </ScrollView>
     )
 }
 MessagePresenter.propTypes = {
