@@ -3,7 +3,6 @@ import styled from "styled-components";
 import SearchBar from "../../components/SearchBar";
 import SearchPresenter from "../Tabs/Search/SearchPresenter";
 import MessagePresenter from "./MessagePresenter";
-
 import gql from "apollo-client";
 import {useQuery} from "react-apollo-hooks";
 import View from "react-native"
