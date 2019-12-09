@@ -4,7 +4,8 @@ import SearchBar from "../../components/SearchBar";
 import SearchPresenter from "../Tabs/Search/SearchPresenter";
 import MessagePresenter from "./MessagePresenter";
 import {gql} from "apollo-boost";
-
+import NavIcon from "../../components/NavIcon";
+import TabNavigation from "../../navigation/TabNavigation"
 
 const View = styled.View`
   flex: 1;
@@ -15,11 +16,13 @@ const Text = styled.Text``;
 export default class extends React.Component {
     static navigationOptions = ({navigation}) => ({
         headerTitle: (
-            <SearchBar
-                value={navigation.getParam("term", "")}
-                onChange={navigation.getParam("onChange", () => null)}
-                onSubmit={navigation.getParam("onSubmit", () => null)}
-            />
+            <>
+                <SearchBar
+                    value={navigation.getParam("term", "")}
+                    onChange={navigation.getParam("onChange", () => null)}
+                    onSubmit={navigation.getParam("onSubmit", () => null)}
+                />
+            </>
         )
     });
 

@@ -11,8 +11,10 @@ import {useMutation} from "react-apollo-hooks";
 import {withNavigation} from "react-navigation";
 import useInput from "../hooks/useInput";
 import CommentInput from "./CommentInput";
-import AuthButton from "./AuthButton";
+import AddButton from "./AddButton";
 import {CREATE_COMMENT} from "../screens/Auth/AuthQueries";
+import {specifiedScalarTypes} from "graphql";
+import CommentBox from "./commentBox";
 
 export const TOGGLE_LIKE = gql`
     mutation toggleLike($postId: String!){
@@ -48,6 +50,9 @@ const IconContainer = styled.View`
 const InfoContainer = styled.View`
   padding: 10px;
 `;
+const RowContainer = styled.View`
+  flex-direction: row;
+`;
 const Caption = styled.Text`
   margin: 3px 0px;
 `;
@@ -71,12 +76,13 @@ const Post = ({
                   navigation,
                   refetch
               }) => {
+    // console.log("comment",comments[0].text);
     const commentInput = useInput("");
     const [loading, setLoading] = useState(false);
     const [isLiked, setIsLiked] = useState(isLikedProp);
     const [likeCount, setLikeCount] = useState(likeCountProp);
-    const [createCommentMutation] = useMutation(CREATE_COMMENT,{
-        variables:{
+    const [createCommentMutation] = useMutation(CREATE_COMMENT, {
+        variables: {
             text: commentInput.value,
             postId: id
         }
@@ -86,15 +92,15 @@ const Post = ({
             postId: id
         }
     });
-    const handleComment= async () =>{
-        try{
+    const handleComment = async () => {
+        try {
             setLoading(true);
             const data = await createCommentMutation();
-            Alert.alert("댓글","등록되었습니다.");
+            Alert.alert("댓글", "등록되었습니다.");
             refetch();
-        }catch(e){
+        } catch (e) {
             console.log(e)
-        }finally {
+        } finally {
             setLoading(false);
 
         }
@@ -117,7 +123,7 @@ const Post = ({
     return (
         <Container>
             <Header>
-                <Touchable onPress={()=> navigation.navigate("UserDetail",{ username: user.username })}>
+                <Touchable onPress={() => navigation.navigate("UserDetail", {username: user.username})}>
                     <Image
                         style={{height: 40, width: 40, borderRadius: 20}}
                         source={{uri: user.avatar}}
@@ -125,7 +131,7 @@ const Post = ({
                 </Touchable>
                 <Touchable
                     onPress={() =>
-                        navigation.navigate("UserDetail", { username: user.username })
+                        navigation.navigate("UserDetail", {username: user.username})
                     }
                 >
                     <HeaderUserContainer>
@@ -146,8 +152,6 @@ const Post = ({
                     />
                 ))}
             </Swiper>
-
-
             <InfoContainer>
                 <IconsContainer>
                     <Touchable onPress={handleLike}>
@@ -178,7 +182,6 @@ const Post = ({
                     </Touchable>
                 </IconsContainer>
                 <Touchable>
-
                     <Bold>{likeCount === 1 ? "1 like" : `${likeCount} likes`}</Bold>
                 </Touchable>
                 <Caption>
@@ -187,17 +190,18 @@ const Post = ({
                 <Touchable>
 
                     <CommentCount>See all {comments.length} comments</CommentCount>
-
                 </Touchable>
                 {comments.map(comment => (
-                    <Text key={comment.id}>{comment.text}</Text>
+                    <CommentBox key={comment.id} {...comment}/>
                 ))}
-                <CommentInput
-                    {...commentInput}
-                    placeholder="comment"
-                    autoCapitalize="words"
-                />
-                <AuthButton loading={loading} onPress={handleComment} text="등록" />
+                <RowContainer>
+                    <CommentInput
+                        {...commentInput}
+                        placeholder="comment"
+                        autoCapitalize="words"
+                    />
+                    <AddButton loading={loading} onPress={handleComment} text="등록"/>
+                </RowContainer>
             </InfoContainer>
         </Container>
     );

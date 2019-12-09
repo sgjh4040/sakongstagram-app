@@ -3,17 +3,28 @@ import  {TouchableOpacity, Image} from "react-native";
 import styled from "styled-components";
 import {withNavigation} from "react-navigation";
 
+const Box = styled.TouchableOpacity`
+`;
+
+
 const View = styled.View`
+    
+    align-items: center;
 `;
 const Text = styled.Text`
-`
+    
+`;
 
-const UserListBox = ({navigation,list = [], id})=>(
-    <TouchableOpacity >
+const UserListBox = ({navigation,avatar, username})=>(
+    <Box >
         <View>
-            <Text>test</Text>
+            <Image
+                style={{height: 90, width: 90, borderRadius: 20}}
+                source={{uri:avatar}}
+            />
+            <Text>{username}</Text>
         </View>
-    </TouchableOpacity>
+    </Box>
 
 )
 

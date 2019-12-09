@@ -6,6 +6,7 @@ import AuthButton from "../../components/AuthButton";
 import { TouchableWithoutFeedback, Keyboard, Alert } from "react-native";
 import { useMutation } from "react-apollo-hooks";
 import { LOG_IN } from "./AuthQueries";
+import Signup from "./Signup";
 
 const View = styled.View`
   justify-content: center;
@@ -44,7 +45,7 @@ export default ({navigation}) => {
         return;
       } else {
         Alert.alert("Account not found");
-        navigation.navigate("Confirm", { email: value });
+        navigation.navigate("Signup", { email: value });
       }
     } catch (e) {
       console.log(e);
