@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState,useEffect} from "react";
 import {ScrollView, RefreshControl} from "react-native";
 import PropTypes from "prop-types";
 import {gql} from "apollo-boost";
@@ -57,9 +57,8 @@ const MessagePresenter = ({term, shouldFetch}) => {
         skip: !shouldFetch,
         fetchPolicy: "network-only"
     });
-    console.log(data);
-
     const onRefresh = async () => {
+        console.log("refetch");
         try {
             setRefreshing(true);
             await refetch({variables: {term}});
@@ -68,7 +67,14 @@ const MessagePresenter = ({term, shouldFetch}) => {
             setRefreshing(false);
         }
     };
-    const {data: roomdata, loading: roomloading} = useQuery(ROOMS_QUERY, {});
+    const {data: roomdata, loading: roomloading,refetch:roomrefetch} = useQuery(ROOMS_QUERY, {});
+    console.log("roomdata!",roomdata);
+    useEffect(()=>{
+        console.log("useEffect")
+        roomrefetch();
+    },[])
+
+
     return (
         <ScrollView
             refreshControl={
@@ -93,8 +99,6 @@ const MessagePresenter = ({term, shouldFetch}) => {
                     roomdata.seeRooms &&
                     roomdata.seeRooms.map(room => <RoomBox key={room.id} {...room}/>)
                 )}
-
-                {(data && data.searchUser && data.searchUser.map(user => <UserListBox key={user.id} {...user}/>))}
             </View>
         </ScrollView>
     )

@@ -29,11 +29,11 @@ const RoomBox = ({
         <Container>
             <Touchable onPress={() => navigation.navigate("MessageDetail", {roomid: id})}>
                 <Image
-                    source={{uri:participants[1].avatar}}
+                    source={{uri:participants[0].avatar}}
                     style={{height: 40, width: 40, borderRadius: 20}}
                 />
                 <Title>
-                    {participants[1].username}
+                    {participants[0].username}
                     {id}
                 </Title>
             </Touchable>

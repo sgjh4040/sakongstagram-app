@@ -4,6 +4,10 @@ import { View, ActivityIndicator } from "react-native";
 export default function withSuspense(Component) {
     return class extends React.Component {
         render() {
+            const { navigation } = this.props;
+            console.log('navigation',navigation.getParam("roomid"));
+            const roomid = navigation.getParam("roomid");
+            const toId = navigation.getParam("toId");
             return (
                 <Suspense
                     fallback={
@@ -18,7 +22,7 @@ export default function withSuspense(Component) {
                         </View>
                     }
                 >
-                    <Component />
+                    <Component roomid={roomid} toId={toId} />
                 </Suspense>
             );
         }

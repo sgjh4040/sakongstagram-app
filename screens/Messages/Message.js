@@ -24,6 +24,9 @@ const SEND_MESSAGE = gql`
     sendMessage(roomId: $roomId message: $message toId: $toId) {
       id
       text
+      room{
+        id
+      }
     }
   }
 `;
@@ -46,32 +49,38 @@ const Text = styled.Text`
     
 `;
 
-const Message = ({navigation}) => {
+const Message = ({roomid, toId}) => {
+    const [roomId, setRoomid] = useState(roomid);
+    let oldMessages = [];
     const [message, setMessage] = useState("");
     const [sendMessageMutation] = useMutation(SEND_MESSAGE, {
         variables: {
             message,
-            roomId: navigation.getParam("roomid")
+            roomId: roomId,
+            toId: toId
         }
     });
-    const {
-        data: {
-            seeRoom: {
-                messages: oldMessages
-            }
-        }, refetch, error
-    } = useQuery(SEE_ROOM, {
-        variables: {
-            id: navigation.getParam("roomid")
-        },
-        suspend: true
-    });
+    if (roomid != undefined) {
+        const {
+            data: {
+                seeRoom: {
+                    messages
+                }
+            }, refetch, error
+        } = useQuery(SEE_ROOM, {
+            variables: {
+                id: roomId
+            },
+            suspend: true
+        });
+        oldMessages = messages;
 
-    console.log("oldMessages", oldMessages);
+    }
+
 
     const {data} = useSubscription(NEW_MESSAGE, {
         variables: {
-            roomId: navigation.getParam("roomid")
+            roomId: roomId
         }
     });
     // refetch();
@@ -94,7 +103,12 @@ const Message = ({navigation}) => {
             return;
         }
         try {
-            await sendMessageMutation();
+
+            const {data:{sendMessage}} = await sendMessageMutation();
+            setRoomid(sendMessage.room.id);
+            if(messages.length == 0){
+                setMessages(previous => [...previous,sendMessage ]);
+            }
             setMessage("");
         } catch (e) {
             console.log(e);
@@ -116,6 +130,7 @@ const Message = ({navigation}) => {
                 </View>
             }
         >
+
             <KeyboardAvoidingView style={{flex: 1}} enabled behavior="padding">
                 <ScrollView
                     contentContainerStyle={{
@@ -126,7 +141,7 @@ const Message = ({navigation}) => {
                 >
 
                     {messages.map(m => (
-                        <View key={m.id} style={{ marginBottom: 10 }}>
+                        <View key={m.id} style={{marginBottom: 10}}>
                             <Text>{m.text}</Text>
                         </View>
                     ))}
@@ -151,4 +166,4 @@ const Message = ({navigation}) => {
         </Suspense>
     )
 }
-export default Message;
+export default withSuspense(Message);
