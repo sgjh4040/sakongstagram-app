@@ -76,6 +76,7 @@ const Post = ({
                   navigation,
                   refetch
               }) => {
+    console.log("refetch",refetch);
     // console.log("comment",comments[0].text);
     const commentInput = useInput("");
     const [loading, setLoading] = useState(false);
@@ -97,7 +98,7 @@ const Post = ({
             setLoading(true);
             const data = await createCommentMutation();
             Alert.alert("댓글", "등록되었습니다.");
-            refetch();
+            await refetch();
         } catch (e) {
             console.log(e)
         } finally {

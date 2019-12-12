@@ -18,7 +18,7 @@ const POST_DETAIL = gql`
 
 
 export default ({ navigation }) => {
-    const { loading, data } = useQuery(POST_DETAIL, {
+    const { loading, data, refetch } = useQuery(POST_DETAIL, {
         variables: { id: navigation.getParam("id") }
     });
     return (
@@ -26,7 +26,7 @@ export default ({ navigation }) => {
             {loading ? (
                 <Loader />
             ) : (
-                data && data.seeFullPost && <Post {...data.seeFullPost} />
+                data && data.seeFullPost && <Post {...data.seeFullPost} refetch={refetch} />
             )}
         </ScrollView>
     );

@@ -5,6 +5,7 @@ import {gql} from "apollo-boost";
 import {withNavigation} from "react-navigation";
 import {Image} from "react-native"
 import constants from "../constants";
+import NavIcon from "./NavIcon";
 
 const Container = styled.View`
   margin:0 5px 10px 5px;
@@ -14,11 +15,19 @@ const Container = styled.View`
   
 `
 const Title = styled.Text`
-    font-size: 12px;
+    font-size: 15px;
+    flex: 4;
 `;
 const Touchable = styled.TouchableOpacity`
+    flex-direction: row;
+    align-items: center;
+    height: ${constants.width / 8};
 
 `;
+const GoMessage = styled.Text`
+    flex: 2;
+    font-size: 13px;
+`;  
 
 const RoomBox = ({
                      id,
@@ -30,12 +39,15 @@ const RoomBox = ({
             <Touchable onPress={() => navigation.navigate("MessageDetail", {roomid: id})}>
                 <Image
                     source={{uri:participants[0].avatar}}
-                    style={{height: 40, width: 40, borderRadius: 20}}
+                    style={{height: 50, width: 50, borderRadius: 20,flex:1}}
                 />
                 <Title>
                     {participants[0].username}
-                    {id}
                 </Title>
+                <GoMessage>
+                    채팅하러 가기
+                </GoMessage>
+                <NavIcon name="ios-arrow-forward"/>
             </Touchable>
         </Container>
     )
@@ -47,7 +59,7 @@ RoomBox.propTypes = {
     participants: PropTypes.arrayOf(
         PropTypes.shape({
             id:PropTypes.string.isRequired,
-            avatar: PropTypes.string.isRequired
+            avatar: PropTypes.string
         })
     )
 }

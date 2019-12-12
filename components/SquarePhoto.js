@@ -4,8 +4,8 @@ import {withNavigation} from "react-navigation";
 import PropTypes from "prop-types";
 import constants from "../constants";
 
-const SquarePhoto = ({ navigation, files = [], id }) => (
-    <TouchableOpacity onPress={() => navigation.navigate("Detail", { id })}>
+const SquarePhoto = ({ navigation, files = [], id,refetch }) => (
+    <TouchableOpacity onPress={() => navigation.navigate("Detail", { id, refetch })}>
         <Image
             source={{ uri: files[0].url }}
             style={{ width: constants.width / 3, height: constants.height / 6 }}

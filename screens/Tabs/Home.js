@@ -28,6 +28,7 @@ const Text = styled.Text``;
 export default () => {
     const [refreshing, setRefreshing] = useState(false);
     const {loading, data, refetch} = useQuery(FEED_QUERY);
+    console.log("afasdfasf",refetch);
     const refresh = async () => {
         try {
             setRefreshing(true);
@@ -41,7 +42,7 @@ export default () => {
     return (
         <ScrollView
             refreshControl={
-                <RefreshControl refreshing={refreshing} onRefresh={refresh}/>
+                <RefreshControl refreshing={refreshing} abc={refresh}/>
             }
         >
             {loading ? (
@@ -49,7 +50,7 @@ export default () => {
             ) : (
                 data &&
                 data.seeFeed &&
-                data.seeFeed.map(post => <Post key={post.id} {...post} refetch={refetch} />)
+                data.seeFeed.map(post => <Post key={post.id} {...post} abc={refetch} />)
             )}
         </ScrollView>
     );
