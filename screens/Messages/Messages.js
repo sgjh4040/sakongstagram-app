@@ -6,9 +6,14 @@ import MessagePresenter from "./MessagePresenter";
 import {gql} from "apollo-boost";
 import NavIcon from "../../components/NavIcon";
 import TabNavigation from "../../navigation/TabNavigation"
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const View = styled.View`
   flex: 1;
+`;
+
+const BackButton = styled.TouchableOpacity`
+    margin-right: 10px;
 `;
 
 const Text = styled.Text``;
@@ -17,6 +22,7 @@ export default class extends React.Component {
     static navigationOptions = ({navigation}) => ({
         headerTitle: (
             <>
+            <BackButton onPress={()=>navigation.navigate("TabNavigation")}><NavIcon name="ios-arrow-back"/></BackButton>
                 <SearchBar
                     value={navigation.getParam("term", "")}
                     onChange={navigation.getParam("onChange", () => null)}

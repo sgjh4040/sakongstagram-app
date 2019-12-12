@@ -1,9 +1,21 @@
-import React, {useState, useMemo, useEffect, Suspense} from "react";
+import React, { useState, useMemo, useEffect, Suspense } from "react";
 import styled from "styled-components";
 import gql from "graphql-tag";
-import {useQuery, useMutation, useSubscription} from "react-apollo-hooks";
-import {ScrollView, TextInput, KeyboardAvoidingView, ActivityIndicator} from "react-native";
+import { useQuery, useMutation, useSubscription } from "react-apollo-hooks";
+import { ScrollView, TextInput, KeyboardAvoidingView, ActivityIndicator } from "react-native";
 import withSuspense from "../../components/withSuspense";
+import {getDateFormat, getYearMonth} from "../../util"
+import * as moment from "../../util"
+
+
+const ME = gql`
+    {
+        me{
+            id
+        }
+    }
+`;
+
 
 const SEE_ROOM = gql`
     query seeRoom($id:String!){
@@ -15,6 +27,10 @@ const SEE_ROOM = gql`
             messages{
             id
             text
+            createdAt
+            from{
+                id
+            }
             }
         }
     }
@@ -26,6 +42,13 @@ const SEND_MESSAGE = gql`
       text
       room{
         id
+        messages{
+            id
+            text
+            from{
+                id
+            }
+        }
       }
     }
   }
@@ -35,6 +58,9 @@ const NEW_MESSAGE = gql`
         newMessage(roomId: $roomId){
             id
             text
+            from{
+                id
+            }
         }
     
     }
@@ -46,11 +72,19 @@ const View = styled.View`
 `;
 
 const Text = styled.Text`
-    
+    text-align:right;
+`;
+const Text1 = styled.Text`
+    text-align:left;
 `;
 
-const Message = ({roomid, toId}) => {
+
+const Message = ({ roomid, toId }) => {
     const [roomId, setRoomid] = useState(roomid);
+    const { data:{
+        me
+    } } = useQuery(ME);
+    console.log(me);
     let oldMessages = [];
     const [message, setMessage] = useState("");
     const [sendMessageMutation] = useMutation(SEND_MESSAGE, {
@@ -74,22 +108,21 @@ const Message = ({roomid, toId}) => {
             suspend: true
         });
         oldMessages = messages;
-
+        refetch();
     }
 
 
-    const {data} = useSubscription(NEW_MESSAGE, {
+    const { data } = useSubscription(NEW_MESSAGE, {
         variables: {
             roomId: roomId
         }
     });
-    // refetch();
+
     const [messages, setMessages] = useState(oldMessages || []);
     const handleNewMessage = () => {
         console.log("handleNewMessage")
         if (data !== undefined) {
-            console.log("data!", data);
-            const {newMessage} = data;
+            const { newMessage } = data;
             setMessages(previous => [...previous, newMessage]);
         }
     };
@@ -104,10 +137,10 @@ const Message = ({roomid, toId}) => {
         }
         try {
 
-            const {data:{sendMessage}} = await sendMessageMutation();
+            const { data: { sendMessage } } = await sendMessageMutation();
             setRoomid(sendMessage.room.id);
-            if(messages.length == 0){
-                setMessages(previous => [...previous,sendMessage ]);
+            if (messages.length == 0) {
+                setMessages(previous => [...previous, sendMessage]);
             }
             setMessage("");
         } catch (e) {
@@ -126,12 +159,12 @@ const Message = ({roomid, toId}) => {
                         alignItems: "center"
                     }}
                 >
-                    <ActivityIndicator/>
+                    <ActivityIndicator />
                 </View>
             }
         >
 
-            <KeyboardAvoidingView style={{flex: 1}} enabled behavior="padding">
+            <KeyboardAvoidingView style={{ flex: 1 }} enabled behavior="padding">
                 <ScrollView
                     contentContainerStyle={{
                         paddingVertical: 50,
@@ -140,11 +173,16 @@ const Message = ({roomid, toId}) => {
                     }}
                 >
 
-                    {messages.map(m => (
-                        <View key={m.id} style={{marginBottom: 10}}>
-                            <Text>{m.text}</Text>
-                        </View>
-                    ))}
+                    {messages.map(m =>
+                        (m.from.id == me.id) ? (<View key={m.id} style={{ marginBottom: 10 }}>
+                            <Text>{m.text}/{moment.getDateFormat(m.createdAt)}</Text>
+                            
+                        </View>) : (
+                                <View key={m.id} style={{ marginBottom: 10 }}>
+                                    <Text1>{m.text}</Text1>
+                                </View>
+                            )
+                    )}
 
                     <TextInput
                         placeholder="입력하세요"

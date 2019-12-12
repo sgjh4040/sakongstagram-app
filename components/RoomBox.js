@@ -36,13 +36,13 @@ const RoomBox = ({
                  }) => {
     return (
         <Container>
-            <Touchable onPress={() => navigation.navigate("MessageDetail", {roomid: id})}>
+            <Touchable onPress={() => navigation.navigate("Message", {roomid: id})}>
                 <Image
-                    source={{uri:participants[0].avatar}}
+                    source={{uri:participants[1].avatar}}
                     style={{height: 50, width: 50, borderRadius: 20,flex:1}}
                 />
                 <Title>
-                    {participants[0].username}
+                    {participants[1].username}
                 </Title>
                 <GoMessage>
                     채팅하러 가기

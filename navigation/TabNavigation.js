@@ -37,9 +37,6 @@ const stackFactory = (initialRoute, customConfig) =>
                 navigationOptions: ({ navigation }) => ({
                     title: navigation.getParam("username")
                 })
-            },
-            MessageDetail:{
-                screen: Message
             }
         },
         {
