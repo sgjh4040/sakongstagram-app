@@ -84,7 +84,6 @@ const Message = ({ roomid, toId }) => {
     const { data:{
         me
     } } = useQuery(ME);
-    console.log(me);
     let oldMessages = [];
     const [message, setMessage] = useState("");
     const [sendMessageMutation] = useMutation(SEND_MESSAGE, {
@@ -107,6 +106,7 @@ const Message = ({ roomid, toId }) => {
             },
             suspend: true
         });
+        console.log(messages);
         oldMessages = messages;
         refetch();
     }

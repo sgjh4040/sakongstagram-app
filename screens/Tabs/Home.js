@@ -50,7 +50,7 @@ export default () => {
             ) : (
                 data &&
                 data.seeFeed &&
-                data.seeFeed.map(post => <Post key={post.id} {...post} abc={refetch} />)
+                data.seeFeed.map(post => <Post key={post.id} {...post} refetch={refetch} />)
             )}
         </ScrollView>
     );
