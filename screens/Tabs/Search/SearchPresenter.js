@@ -7,6 +7,7 @@ import { useQuery } from "react-apollo-hooks";
 import Loader from "../../../components/Loader"
 import SquarePhoto from "../../../components/SquarePhoto";
 import UserDetail from "../../UserDetail";
+import UserCard from "../../../components/UserCard";
 
 export const SEARCH = gql`
   query search($term: String!) {
@@ -19,7 +20,21 @@ export const SEARCH = gql`
       likeCount
       commentCount
     }
+    searchUser(term: $term) {
+      id
+      avatar
+      username
+      isFollowing
+      isSelf
+    }
   }
+`;
+const PostSection = styled.View`
+    flex-direction: row;
+`;
+const UserSection = styled.View`
+    flex-direction: row;
+    min-height: 100px;
 `;
 
 const SearchPresenter = ({ term, shouldFetch }) => {
@@ -46,13 +61,30 @@ const SearchPresenter = ({ term, shouldFetch }) => {
                 <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
             }
         >
-            {loading ? (
-                <Loader />
-            ) : (
-                data &&
-                data.searchPost &&
-                data.searchPost.map(post => <SquarePhoto key={post.id} {...post} refetch={refetch} />)
-            )}
+            <UserSection>
+                {loading ? (
+                    <></>
+                ) : (
+                        data &&
+                        data.searchUser &&
+                        data.searchUser.map(user => <UserCard
+                            key={user.id}
+                            username={user.username}
+                            isFollowing={user.isFollowing}
+                            avatar={user.avatar}
+                            isSelf={user.isSelf}
+                            id={user.id} />)
+                    )}
+            </UserSection>
+            <PostSection>
+                {loading ? (
+                    <Loader />
+                ) : (
+                        data &&
+                        data.searchPost &&
+                        data.searchPost.map(post => <SquarePhoto key={post.id} {...post} refetch={refetch} />)
+                    )}
+            </PostSection>
         </ScrollView>
     );
 };

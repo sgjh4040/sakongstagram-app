@@ -124,7 +124,7 @@ const Post = ({
     return (
         <Container>
             <Header>
-                <Touchable onPress={() => navigation.navigate("UserDetail", {username: user.username})}>
+                <Touchable onPress={() => navigation.navigate("UserDetail", {username: user.username,id:user.id})}>
                     <Image
                         style={{height: 40, width: 40, borderRadius: 20}}
                         source={{uri: user.avatar}}
@@ -132,7 +132,7 @@ const Post = ({
                 </Touchable>
                 <Touchable
                     onPress={() =>
-                        navigation.navigate("UserDetail", {username: user.username})
+                        navigation.navigate("UserDetail", {username: user.username,id:user.id})
                     }
                 >
                     <HeaderUserContainer>

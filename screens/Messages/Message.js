@@ -4,7 +4,7 @@ import gql from "graphql-tag";
 import { useQuery, useMutation, useSubscription } from "react-apollo-hooks";
 import { ScrollView, TextInput, KeyboardAvoidingView, ActivityIndicator } from "react-native";
 import withSuspense from "../../components/withSuspense";
-import {getDateFormat, getYearMonth} from "../../util"
+import { getDateFormat, getYearMonth } from "../../util"
 import * as moment from "../../util"
 
 
@@ -81,10 +81,11 @@ const Text1 = styled.Text`
 
 const Message = ({ roomid, toId }) => {
     const [roomId, setRoomid] = useState(roomid);
-    const { data:{
+    const { data: {
         me
     } } = useQuery(ME);
     let oldMessages = [];
+    const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState("");
     const [sendMessageMutation] = useMutation(SEND_MESSAGE, {
         variables: {
@@ -137,12 +138,14 @@ const Message = ({ roomid, toId }) => {
         }
         try {
 
-            const { data: { sendMessage } } = await sendMessageMutation();
+            const { data: { sendMessage }, loading } = await sendMessageMutation();
+            setLoading(loading);
             setRoomid(sendMessage.room.id);
             if (messages.length == 0) {
-                setMessages(previous => [...previous, sendMessage]);
+                setMessages([...sendMessage.room.messages]);
             }
             setMessage("");
+            console.log("sendMessage",sendMessage);
         } catch (e) {
             console.log(e);
         }
@@ -173,10 +176,10 @@ const Message = ({ roomid, toId }) => {
                     }}
                 >
 
-                    {messages.map(m =>
+                    {loading ? <Text></Text> : messages.map(m =>
                         (m.from.id == me.id) ? (<View key={m.id} style={{ marginBottom: 10 }}>
                             <Text>{m.text}/{moment.getDateFormat(m.createdAt)}</Text>
-                            
+
                         </View>) : (
                                 <View key={m.id} style={{ marginBottom: 10 }}>
                                     <Text1>{m.text}</Text1>

@@ -16,7 +16,7 @@ const Text = styled.Text`
 `;
 
 const UserListBox = ({navigation,avatar, username,id})=>(
-    <Box onPress={() => navigation.navigate("MessageDetail",{toId:id}) } >
+    <Box onPress={() => navigation.navigate("Message",{toId:id}) } >
         <View>
             <Image
                 style={{height: 90, width: 90, borderRadius: 20}}
