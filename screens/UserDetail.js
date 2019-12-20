@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useEffect} from "react";
 import { useQuery } from "react-apollo-hooks";
 import { gql } from "apollo-boost";
 import { USER_FRAGMENT } from "../fragment";
@@ -16,10 +16,12 @@ const GET_USER = gql`
 `;
 
 export default ({ navigation }) => {
-    const { loading, data } = useQuery(GET_USER, {
+    const { loading,refetch, data } = useQuery(GET_USER, {
         variables: { id: navigation.getParam("id") }
     });
-    console.log("userDetail:",data);
+    useEffect(() => {
+      refetch();
+    }, [])
     return (
         <ScrollView>
             {loading ? (

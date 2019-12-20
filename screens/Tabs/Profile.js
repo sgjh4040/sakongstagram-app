@@ -17,8 +17,10 @@ export const ME = gql`
 
 
 export default ({ navigation }) => {
-    const { loading, data } = useQuery(ME);
-    console.log('profile data',data);
+    const { loading,refetch, data } = useQuery(ME);
+    useEffect(() => {
+      refetch();
+    }, [])
     return (
         <ScrollView>
             {loading ? <Loader /> : data && data.me && <UserProfile {...data.me} />}

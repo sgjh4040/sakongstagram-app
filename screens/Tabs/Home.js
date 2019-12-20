@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {ScrollView, RefreshControl} from "react-native";
 import styled from "styled-components";
 import Loader from "../../components/Loader";
@@ -39,6 +39,9 @@ export default () => {
             setRefreshing(false);
         }
     };
+    useEffect(() => {
+        refetch();
+      }, [])
     return (
         <ScrollView
             refreshControl={

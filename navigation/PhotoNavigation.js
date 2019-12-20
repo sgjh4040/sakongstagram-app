@@ -1,10 +1,19 @@
 import {createMaterialTopTabNavigator} from 'react-navigation-tabs';
 import {createStackNavigator} from 'react-navigation-stack';
+import styled from "styled-components";
 import SelectPhoto from "../screens/Photo/SelectPhoto";
 import TakePhoto from "../screens/Photo/TakePhoto";
 import UploadPhoto from "../screens/Photo/UploadPhoto";
 import {stackStyles} from "./config";
 import styles from "../styles";
+import React from "react";
+import NavIcon from "../components/NavIcon";
+
+
+
+const BackButton = styled.TouchableOpacity`
+    margin-left: 10px;
+`;
 
 const PhotoTabs = createMaterialTopTabNavigator(
     {
@@ -47,10 +56,10 @@ const PhotoTabs = createMaterialTopTabNavigator(
 export default createStackNavigator({
         Tabs: {
             screen: PhotoTabs,
-            navigationOptions: {
+            navigationOptions:({ navigation }) => ({
                 title: "사진 선택",
-                // headerBackTitle: null
-            }
+                headerLeft:<BackButton onPress={()=>navigation.navigate("TabNavigation")}><NavIcon name="ios-arrow-back"/></BackButton>
+              })
         },
         Upload: {
             screen: UploadPhoto,

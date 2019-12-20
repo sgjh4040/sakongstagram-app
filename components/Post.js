@@ -1,19 +1,19 @@
-import React, {useState} from "react";
-import {Image, Platform, Alert} from "react-native";
+import React, { useState } from "react";
+import { Image, Platform, Alert } from "react-native";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 import Swiper from "react-native-swiper";
 import constants from "../constants";
-import {Ionicons, MaterialCommunityIcons} from "@expo/vector-icons";
-import {gql} from "apollo-boost";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { gql } from "apollo-boost";
 import styles from "../styles";
-import {useMutation} from "react-apollo-hooks";
-import {withNavigation} from "react-navigation";
+import { useMutation } from "react-apollo-hooks";
+import { withNavigation } from "react-navigation";
 import useInput from "../hooks/useInput";
 import CommentInput from "./CommentInput";
 import AddButton from "./AddButton";
-import {CREATE_COMMENT} from "../screens/Auth/AuthQueries";
-import {specifiedScalarTypes} from "graphql";
+import { CREATE_COMMENT } from "../screens/Auth/AuthQueries";
+import { specifiedScalarTypes } from "graphql";
 import CommentBox from "./commentBox";
 
 export const TOGGLE_LIKE = gql`
@@ -60,27 +60,27 @@ const CommentCount = styled.Text`
   opacity: 0.5;
   font-size: 13px;
 `;
-const Text = styled.Text`
-font-size: 12px;
+const CommentContainer = styled.View`
+
 `;
 
 const Post = ({
-                  id,
-                  user,
-                  location,
-                  files = [],
-                  likeCount: likeCountProp,
-                  caption,
-                  comments = [],
-                  isLiked: isLikedProp,
-                  navigation,
-                  refetch
-              }) => {
-    console.log("refetch",refetch);
-    // console.log("comment",comments[0].text);
+    id,
+    user,
+    location,
+    files = [],
+    likeCount: likeCountProp,
+    caption,
+    comments = [],
+    isLiked: isLikedProp,
+    navigation,
+    refetch
+}) => {
+    // console.log("comment",comments[0]);
     const commentInput = useInput("");
     const [loading, setLoading] = useState(false);
     const [isLiked, setIsLiked] = useState(isLikedProp);
+    const [commentShow, setCommentShow] = useState(false);
     const [likeCount, setLikeCount] = useState(likeCountProp);
     const [createCommentMutation] = useMutation(CREATE_COMMENT, {
         variables: {
@@ -106,6 +106,9 @@ const Post = ({
 
         }
     }
+    const handleCommentContainer = () => {
+        setCommentShow(p => !p);
+    }
     const handleLike = async () => {
         if (isLiked === true) {
             setLikeCount(l => l - 1);
@@ -124,15 +127,15 @@ const Post = ({
     return (
         <Container>
             <Header>
-                <Touchable onPress={() => navigation.navigate("UserDetail", {username: user.username,id:user.id})}>
+                <Touchable onPress={() => navigation.navigate("UserDetail", { username: user.username, id: user.id })}>
                     <Image
-                        style={{height: 40, width: 40, borderRadius: 20}}
-                        source={{uri: user.avatar}}
+                        style={{ height: 40, width: 40, borderRadius: 20 }}
+                        source={{ uri: user.avatar }}
                     />
                 </Touchable>
                 <Touchable
                     onPress={() =>
-                        navigation.navigate("UserDetail", {username: user.username,id:user.id})
+                        navigation.navigate("UserDetail", { username: user.username, id: user.id })
                     }
                 >
                     <HeaderUserContainer>
@@ -143,13 +146,13 @@ const Post = ({
             </Header>
             <Swiper
                 showsPagination={true}
-                style={{height: constants.height / 2.5}}
+                style={{ height: constants.height / 2.5 }}
             >
                 {files.map(file => (
                     <Image
-                        style={{width: constants.width, height: constants.height / 2.5}}
+                        style={{ width: constants.width, height: constants.height / 2.5 }}
                         key={file.id}
-                        source={{uri: file.url}}
+                        source={{ uri: file.url }}
                     />
                 ))}
             </Swiper>
@@ -163,11 +166,11 @@ const Post = ({
                                 name={
                                     Platform.OS === "ios"
                                         ? isLiked
-                                        ? "ios-heart"
-                                        : "ios-heart-empty"
+                                            ? "ios-heart"
+                                            : "ios-heart-empty"
                                         : isLiked
-                                        ? "md-heart"
-                                        : "md-heart-empty"
+                                            ? "md-heart"
+                                            : "md-heart-empty"
                                 }
                             />
                         </IconContainer>
@@ -188,21 +191,25 @@ const Post = ({
                 <Caption>
                     <Bold>{user.username}</Bold> {caption}
                 </Caption>
-                <Touchable>
-
+                <Touchable onPress={handleCommentContainer}>
                     <CommentCount>See all {comments.length} comments</CommentCount>
                 </Touchable>
-                {comments.map(comment => (
-                    <CommentBox key={comment.id} {...comment}/>
-                ))}
-                <RowContainer>
-                    <CommentInput
-                        {...commentInput}
-                        placeholder="comment"
-                        autoCapitalize="words"
-                    />
-                    <AddButton loading={loading} onPress={handleComment} text="등록"/>
-                </RowContainer>
+                {commentShow ? (
+                    <CommentContainer>
+                        {comments.map(comment => (
+                            <CommentBox key={comment.id} {...comment} />
+                        ))}
+                        <RowContainer>
+                            <CommentInput
+                                {...commentInput}
+                                placeholder="comment"
+                                autoCapitalize="words"
+                            />
+                            <AddButton loading={loading} onPress={handleComment} text="등록" />
+                        </RowContainer>
+                    </CommentContainer>)
+                    : (<></>)}
+
             </InfoContainer>
         </Container>
     );

@@ -1,13 +1,14 @@
-import React, {useState} from "react";
-import {Image, View, TouchableOpacity} from "react-native";
+import React, { useState } from "react";
+import { Image, View, TouchableOpacity } from "react-native";
 import styled from "styled-components";
-import {Ionicons} from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import PropTypes from "prop-types";
 import styles from "../styles";
-import {Platform} from "@unimodules/core";
+import { Platform } from "@unimodules/core";
 import constants from "../constants";
 import SquarePhoto from "./SquarePhoto";
 import Post from "./Post";
+import FollowButton from "./FollowButton"
 
 const ProfileHeader = styled.View`
   padding-vertical: 5px;
@@ -21,11 +22,19 @@ const HeaderColumn = styled.View``;
 
 const ProfileStats = styled.View`
   flex-direction: row;
+  justify-content: center;
+  
+`;
+const FollowButtonContainer = styled.View`
+  flex-direction: row;
+  justify-content:center;
+  align-items: center;
+  margin-top:10px;
 `;
 
 const Stat = styled.View`
   align-items: center;
-  margin-left: 40px;
+  margin: 0 5px;
 `;
 
 const Bold = styled.Text`
@@ -54,24 +63,30 @@ const Button = styled.View`
   width: ${constants.width / 2};
   align-items: center;
 `;
+const PhotoContainer = styled.View`
+    flex-direction: row;
+`;
 
 const UserProfile = ({
-                         avatar,
-                         postsCount,
-                         followersCount,
-                         followingCount,
-                         bio,
-                         fullName,
-                         posts
-                     }) => {
+    id,
+    avatar,
+    postsCount,
+    followersCount,
+    followingCount,
+    bio,
+    fullName,
+    posts,
+    isSelf,
+    isFollowing
+}) => {
     const [isGrid, setIsGrid] = useState(true);
     const toggleGrid = () => setIsGrid(i => !i);
     return (
         <View>
             <ProfileHeader>
                 <Image
-                    style={{height: 80, width: 80, borderRadius: 40}}
-                    source={{uri: avatar}}
+                    style={{ height: 80, width: 80, borderRadius: 40 }}
+                    source={{ uri: avatar }}
                 />
                 <HeaderColumn>
                     <ProfileStats>
@@ -88,6 +103,10 @@ const UserProfile = ({
                             <StatName>Following</StatName>
                         </Stat>
                     </ProfileStats>
+                    <FollowButtonContainer>
+                        {!isSelf && <FollowButton isFollowing={isFollowing} id={id} />}
+                    </FollowButtonContainer>
+
                 </HeaderColumn>
             </ProfileHeader>
             <ProfileMeta>
@@ -114,14 +133,16 @@ const UserProfile = ({
                     </Button>
                 </TouchableOpacity>
             </ButtonContainer>
-            {posts &&
-            posts.map(p =>
-                isGrid ? (
-                    <SquarePhoto key={p.id} {...p} />
-                ) : (
-                    <Post key={p.id} {...p} />
-                )
-            )}
+            <PhotoContainer>
+                {posts &&
+                    posts.map(p =>
+                        isGrid ? (
+                            <SquarePhoto key={p.id} {...p} />
+                        ) : (
+                                <Post key={p.id} {...p} />
+                            )
+                    )}
+            </PhotoContainer>
         </View>
     );
 };

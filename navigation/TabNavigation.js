@@ -29,13 +29,15 @@ const stackFactory = (initialRoute, customConfig) =>
                 screen: Detail,
                 navigationOptions: {
                     headerTintColor: styles.blackColor,
-                    title: "Photo"
+                    title: "Post",
+                    headerBackTitle: null
                 }
             },
             UserDetail:{
                 screen: UserDetail,
                 navigationOptions: ({ navigation }) => ({
-                    title: navigation.getParam("username")
+                    title: navigation.getParam("username"),
+                    headerBackTitle: null
                 })
             }
         },
