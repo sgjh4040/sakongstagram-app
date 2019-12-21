@@ -5,6 +5,7 @@ import constants from "../constants"
 import {ActivityIndicator} from "react-native";
 
 const Touchable = styled.TouchableOpacity`
+  margin:10px;
 
 `;
 

@@ -9,6 +9,8 @@ import constants from "../constants";
 import SquarePhoto from "./SquarePhoto";
 import Post from "./Post";
 import FollowButton from "./FollowButton"
+import LogoutButton from "./Button"
+import { useLogOut } from "../AuthContext"
 
 const ProfileHeader = styled.View`
   padding-vertical: 5px;
@@ -67,6 +69,7 @@ const PhotoContainer = styled.View`
     flex-direction: row;
 `;
 
+
 const UserProfile = ({
     id,
     avatar,
@@ -79,8 +82,15 @@ const UserProfile = ({
     isSelf,
     isFollowing
 }) => {
+    const logOut = useLogOut();
+    const handleLogout = () => {
+        console.log("handleLogout")
+        logOut();
+
+    }
     const [isGrid, setIsGrid] = useState(true);
     const toggleGrid = () => setIsGrid(i => !i);
+
     return (
         <View>
             <ProfileHeader>
@@ -104,7 +114,9 @@ const UserProfile = ({
                         </Stat>
                     </ProfileStats>
                     <FollowButtonContainer>
-                        {!isSelf && <FollowButton isFollowing={isFollowing} id={id} />}
+                        {isSelf
+                            ? (<LogoutButton text="로그아웃" onPress={handleLogout} style={{ color: "#ED4956" }}></LogoutButton>)
+                            : (<FollowButton isFollowing={isFollowing} id={id} />)}
                     </FollowButtonContainer>
 
                 </HeaderColumn>
@@ -143,7 +155,7 @@ const UserProfile = ({
                             )
                     )}
             </PhotoContainer>
-        </View>
+        </View >
     );
 };
 UserProfile.propTypes = {

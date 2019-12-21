@@ -22,6 +22,9 @@ export default ({navigation}) => {
       email: emailInput.value
     }
   });
+  const handleToSign = () =>{
+    navigation.navigate("Signup");
+  }
 
   const handleLogin =async () => {
     const { value } = emailInput;
@@ -40,11 +43,11 @@ export default ({navigation}) => {
         data: { requestSecret }
       } = await requestSecretMutation();
       if (requestSecret) {
-        Alert.alert("Check your email");
+        Alert.alert("이메일을 확인해 주세요");
         navigation.navigate("Confirm", { email: value });
         return;
       } else {
-        Alert.alert("Account not found");
+        Alert.alert("가입되지 않은 이메일입니다");
         navigation.navigate("Signup", { email: value });
       }
     } catch (e) {
@@ -67,6 +70,7 @@ export default ({navigation}) => {
           autoCorrect={false}
         />
         <AuthButton loading={loading} onPress={handleLogin} text="Log In" />
+        <AuthButton onPress={handleToSign} text="회원가입" />
       </View>
     </TouchableWithoutFeedback>
   )

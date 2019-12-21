@@ -97,7 +97,9 @@ const Post = ({
         try {
             setLoading(true);
             const data = await createCommentMutation();
+            commentInput.setValue('')
             Alert.alert("댓글", "등록되었습니다.");
+            
             await refetch();
         } catch (e) {
             console.log(e)

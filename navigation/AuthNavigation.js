@@ -7,15 +7,23 @@ import AuthHome from "../screens/Auth/AuthHome";
 
 const AuthNavigation = createStackNavigator(
     {
-        Login,
+        Login:{
+            screen: Login,
+            navigationOptions:{
+                headerShown: false,
+                headerBackTitle: null
+            }
+        },
         Confirm,
-        Signup,
+        Signup:{
+            screen: Signup,
+            navigationOptions:{
+                title:"회원가입"
+            }
+        },
         AuthHome,
 
 
-    },
-    {
-        headerMode:"none"
     }
 );
 

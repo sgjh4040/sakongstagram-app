@@ -43,7 +43,7 @@ const stackFactory = (initialRoute, customConfig) =>
         },
         {
             defaultNavigationOptions: {
-                // headerBackTitle: null,
+                headerBackTitle: null,
                 headerTintColor: styles.blackColor,
                 headerStyle: {...stackStyles}
             }
@@ -51,7 +51,7 @@ const stackFactory = (initialRoute, customConfig) =>
     );
 
 export default createBottomTabNavigator({
-        홈: {
+        home: {
             screen: stackFactory(Home, {
                 headerRight: <MessagesLink/>,
                 headerTitle: <NavIcon name="logo-instagram" size={36}/>
@@ -62,9 +62,9 @@ export default createBottomTabNavigator({
                 )
             }
         },
-        검색: {
+        search: {
             screen: stackFactory(Search, {
-                // headerBackTitle: null
+                headerBackTitle: null
             }),
             navigationOptions: {
                 tabBarIcon: ({focused}) => (
@@ -88,7 +88,7 @@ export default createBottomTabNavigator({
         },
         Notifications: {
             screen: stackFactory(Notifications, {
-                title: "Notifications"
+                title: "알림"
             }),
             navigationOptions: {
                 tabBarIcon: ({focused}) => (
@@ -104,10 +104,14 @@ export default createBottomTabNavigator({
                                 : "md-heart-empty"
                         }
                     />
-                )
+                ),
+                tabBarOnPress:({defaultHandler})=>{
+                    console.log("second click")
+                    defaultHandler();
+                }
             }
         },
-        프로필: {
+        profile: {
             screen: stackFactory(Profile, {
                 title: "프로필"
             }),

@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Image } from "react-native"
 import styled from "styled-components";
 import gql from "graphql-tag";
-import { useQuery } from "react-apollo-hooks";
+import { useQuery, useMutation } from "react-apollo-hooks";
 import constants from "../constants";
 import { ScrollView } from "react-native-gesture-handler";
 import Loader from "../components/Loader";
@@ -17,9 +17,19 @@ const NOTI_QUERY = gql`
       avatar
       username
     }
+    post{
+      id
+    }
   }
 }
-`
+`;
+const DELETE_NOTIFICATION = gql`
+  mutation deleteNotification($id:String!){
+    deleteNotification(id:$id){
+      id
+    }
+  }
+`;
 
 const Container = styled.View`
   padding: 15px;
@@ -38,11 +48,26 @@ const Message = styled.Text`
 
 const Text = styled.Text``;
 
-export default () => {
+export default ({ navigation }) => {
+  console.log("start");
   const { loading, data, refetch } = useQuery(NOTI_QUERY);
+  const [deleteNotification,{data:delNotification}] = useMutation(DELETE_NOTIFICATION);
 
+
+  handleNotification = async (notification) => {
+    console.log("click")
+    try {
+      navigation.navigate("Detail", { id: notification.post.id })
+      await deleteNotification({variables:{id:notification.id}});
+      
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
   useEffect(() => {
+    console.log("notification useEffect")
     refetch();
   }, [])
 
@@ -51,8 +76,8 @@ export default () => {
   return (
     <ScrollView>
       <Container>
-        {loading ? <Loader /> :data && data.seeNotification && data.seeNotification.map(notification => (
-          <Touchable key={notification.id}>
+        {loading ? <Loader /> : data && data.seeNotification && data.seeNotification.map(notification => (
+          <Touchable onPress={() => handleNotification(notification)} key={notification.id}>
             <Image
               source={{ uri: notification.from.avatar }}
               style={{ height: 50, width: 50, borderRadius: 20, flex: 1 }}
