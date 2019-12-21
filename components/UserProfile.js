@@ -11,6 +11,7 @@ import Post from "./Post";
 import FollowButton from "./FollowButton"
 import LogoutButton from "./Button"
 import { useLogOut } from "../AuthContext"
+import { useActionSheet } from '@expo/react-native-action-sheet'
 
 const ProfileHeader = styled.View`
   padding-vertical: 5px;
@@ -80,16 +81,48 @@ const UserProfile = ({
     fullName,
     posts,
     isSelf,
-    isFollowing
+    isFollowing,
+    navigation
 }) => {
+    const { showActionSheetWithOptions } = useActionSheet();
+    const [isGrid, setIsGrid] = useState(true);
+    const toggleGrid = () => setIsGrid(i => !i);
+    const handleProfileImage = () => {
+        console.log("프로필 변경");
+        showActionSheet();
+    }
+    const showActionSheet = () => {
+        const options = ['사진첩', '카메라', '취소'];
+        const destructiveButtonIndex = 1;
+        const cancelButtonIndex = 2;
+        showActionSheetWithOptions({
+            options,
+            cancelButtonIndex,
+            destructiveButtonIndex,
+        },
+        buttonIndex => {
+            switch (buttonIndex){
+                case 0: {
+                    console.log("사진첩")
+                    navigation.navigate("Select",{from:"profile"});
+
+                }
+                case 1: {
+                    console.log("카메라")
+
+                }
+                case 2: {
+                    console.log("취소")
+                }
+            }
+          },
+        )
+    }
     const logOut = useLogOut();
     const handleLogout = () => {
-        console.log("handleLogout")
         logOut();
 
     }
-    const [isGrid, setIsGrid] = useState(true);
-    const toggleGrid = () => setIsGrid(i => !i);
 
     return (
         <View>
@@ -115,9 +148,10 @@ const UserProfile = ({
                     </ProfileStats>
                     <FollowButtonContainer>
                         {isSelf
-                            ? (<LogoutButton text="로그아웃" onPress={handleLogout} style={{ color: "#ED4956" }}></LogoutButton>)
+                            ? (<LogoutButton text="로그아웃" onPress={handleLogout} style={{ color: "#ED4956" }} />)
                             : (<FollowButton isFollowing={isFollowing} id={id} />)}
                     </FollowButtonContainer>
+                    <TouchableOpacity onPress={handleProfileImage}><Bio>ddd</Bio></TouchableOpacity>
 
                 </HeaderColumn>
             </ProfileHeader>

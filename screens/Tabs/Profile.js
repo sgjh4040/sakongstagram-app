@@ -23,7 +23,7 @@ export default ({ navigation }) => {
     }, [])
     return (
         <ScrollView>
-            {loading ? <Loader /> : data && data.me && <UserProfile {...data.me} />}
+            {loading ? <Loader /> : data && data.me && <UserProfile {...data.me} navigation={navigation} />}
         </ScrollView>
     );
 };

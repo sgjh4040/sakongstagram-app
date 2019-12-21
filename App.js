@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { AppLoading } from "expo";
 import * as Font from 'expo-font';
 import { Asset } from 'expo-asset'
-import {AsyncStorage} from 'react-native';
+import { AsyncStorage } from 'react-native';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { persistCache } from 'apollo-cache-persist';
 // import ApolloClient from "apollo-boost";
@@ -13,7 +13,7 @@ import apolloClientOptions from "./apollo";
 import styles from "./styles";
 import { ThemeProvider } from "styled-components"
 import NavController from "./components/NavController"
-import {AuthProvider} from "./AuthContext"
+import { AuthProvider } from "./AuthContext"
 
 import { HttpLink } from 'apollo-link-http';
 import { WebSocketLink } from 'apollo-link-ws';
@@ -22,6 +22,7 @@ import { createHttpLink } from 'apollo-link-http';
 import { setContext } from 'apollo-link-context';
 import { split } from 'apollo-link';
 import { getMainDefinition } from 'apollo-utilities';
+import { connectActionSheet, ActionSheetProvider } from '@expo/react-native-action-sheet'
 
 // Create an http link:
 const httpLink = new createHttpLink({
@@ -37,7 +38,7 @@ const wsLink = new WebSocketLink({
 });
 const authLink = setContext(async (_, { headers }) => {
   // get the authentication token from local storage if it exists
-  const token =await AsyncStorage.getItem('jwt');
+  const token = await AsyncStorage.getItem('jwt');
   // return the headers to the context so httpLink can read them
   return {
     headers: {
@@ -47,19 +48,19 @@ const authLink = setContext(async (_, { headers }) => {
   }
 });
 const link = split(
-    // split based on operation type
-    ({ query }) => {
-      const definition = getMainDefinition(query);
-      return (
-          definition.kind === 'OperationDefinition' &&
-          definition.operation === 'subscription'
-      );
-    },
-    wsLink,
-    httpLink,
+  // split based on operation type
+  ({ query }) => {
+    const definition = getMainDefinition(query);
+    return (
+      definition.kind === 'OperationDefinition' &&
+      definition.operation === 'subscription'
+    );
+  },
+  wsLink,
+  httpLink,
 );
 
-export default function App() {
+const App = () => {
   const [loaded, setLoaded] = useState(false);
   const [client, setClient] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(null);
@@ -83,21 +84,21 @@ export default function App() {
       // AsyncStorage.setItem('isLoggedIn','false');
       // AsyncStorage.removeItem("token");
       const isLoggedIn = await AsyncStorage.getItem("isLoggedIn");
-      console.log('isLoggedIn',isLoggedIn);
+      console.log('isLoggedIn', isLoggedIn);
       const token = await AsyncStorage.getItem("jwt");
-      console.log('token',token);
+      console.log('token', token);
 
-      if(!isLoggedIn || isLoggedIn=== "false"){
+      if (!isLoggedIn || isLoggedIn === "false") {
         setIsLoggedIn(false);
-      }else{
+      } else {
         setIsLoggedIn(true);
       }
-      
+
       setLoaded(true);
       setClient(client);
     } catch (e) {
       console.log(e);
-    } 
+    }
   };
   useEffect(() => {
     preLoad();
@@ -109,7 +110,7 @@ export default function App() {
     <ApolloProvider client={client}>
       <ThemeProvider theme={styles}>
         <AuthProvider isLoggedIn={isLoggedIn}>
-          <NavController/>
+          <NavController />
         </AuthProvider>
       </ThemeProvider>
     </ApolloProvider>
@@ -118,4 +119,10 @@ export default function App() {
     )
 }
 
+const ConnectedApp = connectActionSheet(App)
+export default () => (
+  <ActionSheetProvider>
+    <ConnectedApp />
+  </ActionSheetProvider>
+)
 

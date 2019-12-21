@@ -95,7 +95,6 @@ export default ({navigation}) => {
                 }
             });
             if (upload.id) {
-                console.log("TabNav로")
                 navigation.navigate("TabNavigation");
             }
         } catch (e) {
