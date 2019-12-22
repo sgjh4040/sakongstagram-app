@@ -42,13 +42,19 @@ const View = styled.View`
     padding: 10px;
 
 `;
+const SearchContainer = styled.View`
+    flex:1;
+    align-items: center;
+    justify-content: center;
+`;
 
 const Text = styled.Text`
     font-size: 16px;
+    margin-bottom: 10px;
+    font-weight: 700;
 `;
 
 const MessagePresenter = ({term, shouldFetch}) => {
-    const [initpage, setInitpage] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
     const {data, loading, refetch} = useQuery(SEARCH, {
         variables: {
@@ -68,9 +74,8 @@ const MessagePresenter = ({term, shouldFetch}) => {
         }
     };
     const {data: roomdata, loading: roomloading,refetch:roomrefetch} = useQuery(ROOMS_QUERY, {});
-    console.log("roomdata!",roomdata);
     useEffect(()=>{
-        console.log("useEffect")
+        console.log("shouldFetch",shouldFetch)
         roomrefetch();
     },[])
 
@@ -82,7 +87,11 @@ const MessagePresenter = ({term, shouldFetch}) => {
             }
         >
             <UserBox>
-                {loading ? (
+                {!shouldFetch ? (
+                    <SearchContainer>
+                        <Text>이름을 검색해 주세요</Text>
+                    </SearchContainer>
+                ):loading ? (
                     <Loader/>
                 ) : (
                     data &&

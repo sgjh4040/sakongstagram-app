@@ -15,6 +15,7 @@ const Container = styled.View`
   
 `
 const Title = styled.Text`
+    margin-left: 10px;
     font-size: 15px;
     flex: 4;
 `;
@@ -38,11 +39,11 @@ const RoomBox = ({
         <Container>
             <Touchable onPress={() => navigation.navigate("Message", {roomid: id})}>
                 <Image
-                    source={{uri:participants[1].avatar}}
-                    style={{height: 50, width: 50, borderRadius: 20,flex:1}}
+                    source={{uri:participants[0].avatar}}
+                    style={{height: 40, width: 40, borderRadius: 20}}
                 />
                 <Title>
-                    {participants[1].username}
+                    {participants[0].username}
                 </Title>
                 <GoMessage>
                     채팅하러 가기

@@ -38,10 +38,12 @@ const Touchable = styled.TouchableOpacity`
     flex-direction: row;
     height: ${constants.width / 8};
     border-bottom-color:#E6E6E6;
-  border-bottom-width: 1px;
+    border-bottom-width: 1px;
+    align-items: center;
 
 `;
 const Message = styled.Text`
+    margin-left:10px;
     font-size: 15px;
     flex: 8;
 `;
@@ -49,8 +51,8 @@ const Message = styled.Text`
 const Text = styled.Text``;
 
 export default ({ navigation }) => {
-  console.log("start");
   const { loading, data, refetch } = useQuery(NOTI_QUERY);
+  console.log(data);
   const [deleteNotification,{data:delNotification}] = useMutation(DELETE_NOTIFICATION);
 
 
@@ -80,7 +82,7 @@ export default ({ navigation }) => {
           <Touchable onPress={() => handleNotification(notification)} key={notification.id}>
             <Image
               source={{ uri: notification.from.avatar }}
-              style={{ height: 50, width: 50, borderRadius: 20, flex: 1 }}
+              style={{ height: 40, width: 40, borderRadius: 20,}}
             />
             <Message>{notification.message}</Message>
           </Touchable>
