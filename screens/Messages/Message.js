@@ -6,6 +6,7 @@ import { ScrollView, TextInput, KeyboardAvoidingView, ActivityIndicator } from "
 import withSuspense from "../../components/withSuspense";
 import { getDateFormat, getYearMonth } from "../../util"
 import * as moment from "../../util"
+import constants from "../../constants"
 
 
 const ME = gql`
@@ -70,12 +71,27 @@ const NEW_MESSAGE = gql`
 const View = styled.View`
     
 `;
+const MessageContainer = styled.View`
+    flex-direction: row;
+    align-self: ${props => props.align};
+    align-items: flex-end;
+    max-width: ${constants.width/1.1}
+`;
+
+const MessageBubble = styled.View`
+  background-color: white;
+  box-shadow:  0 5px 15px rgba(0, 0, 0, 0.15);
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  align-self: ${props => props.align};
+`;
 
 const Text = styled.Text`
-    text-align:right;
 `;
-const Text1 = styled.Text`
-    text-align:left;
+const DateText = styled.Text`
+    margin-bottom: 10px;
 `;
 
 
@@ -145,7 +161,7 @@ const Message = ({ roomid, toId }) => {
                 setMessages([...sendMessage.room.messages]);
             }
             setMessage("");
-            console.log("sendMessage",sendMessage);
+            console.log("sendMessage", sendMessage);
         } catch (e) {
             console.log(e);
         }
@@ -177,13 +193,21 @@ const Message = ({ roomid, toId }) => {
                 >
 
                     {loading ? <Text></Text> : messages.map(m =>
-                        (m.from.id == me.id) ? (<View key={m.id} style={{ marginBottom: 10 }}>
-                            <Text>{m.text}/{moment.getDateFormat(m.createdAt)}</Text>
+                        (m.from.id == me.id) ? (
+                            <MessageContainer align={"flex-end"}>
+                                <DateText>
+                                {moment.getDateFormat(m.createdAt)}
+                                </DateText>
+                                <MessageBubble key={m.id} align={"flex-end"}>
+                                    <Text>
+                                        {m.text}
+                                    </Text>
 
-                        </View>) : (
-                                <View key={m.id} style={{ marginBottom: 10 }}>
-                                    <Text1>{m.text}</Text1>
-                                </View>
+                                </MessageBubble>
+                            </MessageContainer>) : (
+                                <MessageBubble key={m.id} align={"flex-start"}>
+                                    <Text>{m.text}</Text>
+                                </MessageBubble>
                             )
                     )}
 
