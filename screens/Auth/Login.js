@@ -7,6 +7,7 @@ import { TouchableWithoutFeedback, Keyboard, Alert } from "react-native";
 import { useMutation } from "react-apollo-hooks";
 import { LOG_IN } from "./AuthQueries";
 import Signup from "./Signup";
+import {Image} from "react-native"
 
 const View = styled.View`
   justify-content: center;
@@ -61,6 +62,10 @@ export default ({navigation}) => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View>
+      <Image
+                    source={{uri:'/assets/logo.png'}}
+                    style={{height: 50, width: 50, borderRadius: 20,flex:1}}
+                />
         <AuthInput
           {...emailInput}
           placeholder="Email"

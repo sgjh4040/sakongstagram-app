@@ -32,30 +32,31 @@ const DELETE_NOTIFICATION = gql`
 `;
 
 const Container = styled.View`
-  padding: 15px;
+  
 `;
 const Touchable = styled.TouchableOpacity`
     flex-direction: row;
-    height: ${constants.width / 8};
+    height: ${constants.width / 7};
     border-bottom-color:#E6E6E6;
-  border-bottom-width: 1px;
+    border-bottom-width: 1px;
+    align-items:center;
+    padding: 15px;
 
 `;
 const Message = styled.Text`
     font-size: 15px;
     flex: 8;
+    margin-left:10px;
 `;
 
 const Text = styled.Text``;
 
 export default ({ navigation }) => {
-  console.log("start");
   const { loading, data, refetch } = useQuery(NOTI_QUERY);
   const [deleteNotification,{data:delNotification}] = useMutation(DELETE_NOTIFICATION);
 
 
   handleNotification = async (notification) => {
-    console.log("click")
     try {
       navigation.navigate("Detail", { id: notification.post.id })
       await deleteNotification({variables:{id:notification.id}});
@@ -67,8 +68,15 @@ export default ({ navigation }) => {
   }
 
   useEffect(() => {
-    console.log("notification useEffect")
-    refetch();
+    const refresh = navigation.addListener("didFocus",()=>{
+      console.log("didFocus");
+      refetch()
+    })
+    console.log('useEffect')
+    return ()=>{
+      refresh.remove();
+    }
+    
   }, [])
 
 
@@ -80,7 +88,7 @@ export default ({ navigation }) => {
           <Touchable onPress={() => handleNotification(notification)} key={notification.id}>
             <Image
               source={{ uri: notification.from.avatar }}
-              style={{ height: 50, width: 50, borderRadius: 20, flex: 1 }}
+              style={{ height: 50, width: 50, borderRadius: 25}}
             />
             <Message>{notification.message}</Message>
           </Touchable>

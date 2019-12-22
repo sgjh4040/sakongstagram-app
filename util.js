@@ -1,18 +1,18 @@
-import Moment from 'moment';
+import moment from 'moment';
 
-export const  getYearMonth= (day)=> Moment(day).format('YYYY.MM');
+export const  getYearMonth= (day)=> moment(day).format('YYYY.MM');
 
-export const getDateFormat = (day) => Moment(day).format('YYYY-MM-DD');
+export const getDateFormat = (day) => moment(day).format('YYYY-MM-DD');
 
-export const getRegstrationDayFormat = (day) => Moment(day).format('YYYY.MM.DD');
+export const getRegstrationDayFormat = (day) => moment(day).format('YYYY.MM.DD');
 
 export const  getFormattedRegDate = (day) => {
-    let daysDiff = Moment().diff(Moment(day, 'YYYYMMDD'), 'days');
+    let daysDiff = moment().diff(moment(day, 'YYYYMMDD'), 'days');
     if (daysDiff > 1) {
-        return Moment(day).format('YY.MM.DD HH:MM');
+        return moment(day).format('YY.MM.DD HH:mm');
     } else if (daysDiff === 1) {
-        return '어제 ' + Moment(day).format('HH:MM');
+        return '어제 ' + moment(day).format('HH:mm');
     } else {
-        return '오늘 ' + Moment(day).format('HH:MM');
+        return '오늘 ' + moment(day).format('HH:mm');
     }
 }

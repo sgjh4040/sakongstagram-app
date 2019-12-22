@@ -19,7 +19,15 @@ export const ME = gql`
 export default ({ navigation }) => {
     const { loading,refetch, data } = useQuery(ME);
     useEffect(() => {
-      refetch();
+      const refresh = navigation.addListener("didFocus",()=>{
+        console.log("didFocus")
+        refetch()
+      })
+      console.log('useEffect')
+      return ()=>{
+        refresh.remove();
+      }
+      
     }, [])
     return (
         <ScrollView>

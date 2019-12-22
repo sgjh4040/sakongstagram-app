@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Image, View, TouchableOpacity } from "react-native";
 import styled from "styled-components";
-import { Ionicons } from "@expo/vector-icons";
+import { AntDesign, Ionicons } from "@expo/vector-icons";
 import PropTypes from "prop-types";
 import styles from "../styles";
 import { Platform } from "@unimodules/core";
@@ -27,6 +27,14 @@ const ProfileStats = styled.View`
   flex-direction: row;
   justify-content: center;
   
+`;
+const ProfileImageContainer = styled.View`
+    position: relative;
+`;
+const PlusButton = styled.TouchableOpacity`
+    position:absolute;
+    right:0;
+    bottom:0;
 `;
 const FollowButtonContainer = styled.View`
   flex-direction: row;
@@ -84,8 +92,10 @@ const UserProfile = ({
     isFollowing,
     navigation
 }) => {
+    // console.log(navigation);
     const { showActionSheetWithOptions } = useActionSheet();
     const [isGrid, setIsGrid] = useState(true);
+
     const toggleGrid = () => setIsGrid(i => !i);
     const handleProfileImage = () => {
         console.log("프로필 변경");
@@ -100,22 +110,24 @@ const UserProfile = ({
             cancelButtonIndex,
             destructiveButtonIndex,
         },
-        buttonIndex => {
-            switch (buttonIndex){
-                case 0: {
-                    console.log("사진첩")
-                    navigation.navigate("Select",{from:"profile"});
-
+            buttonIndex => {
+                switch (buttonIndex) {
+                    case 0: {
+                        console.log("사진첩")
+                        navigation.navigate("Select", { from: "profile" });
+                        break;
+                    }
+                    case 1: {
+                        console.log("카메라")
+                        navigation.navigate("Take", { from: "profile" });
+                        break;
+                    }
+                    case 2: {
+                        console.log("취소")
+                        break;
+                    }
                 }
-                case 1: {
-                    console.log("카메라")
-
-                }
-                case 2: {
-                    console.log("취소")
-                }
-            }
-          },
+            },
         )
     }
     const logOut = useLogOut();
@@ -126,24 +138,31 @@ const UserProfile = ({
 
     return (
         <View>
+            
             <ProfileHeader>
-                <Image
-                    style={{ height: 80, width: 80, borderRadius: 40 }}
-                    source={{ uri: avatar }}
-                />
+                <ProfileImageContainer>
+                    <Image
+                        style={{ height: 80, width: 80, borderRadius: 40 }}
+                        source={{ uri: avatar }}
+                    />
+                    {isSelf ? <PlusButton onPress={handleProfileImage}>
+                        <AntDesign name="pluscircle" size={20} />
+                    </PlusButton>: <></>}
+                    
+                </ProfileImageContainer>
                 <HeaderColumn>
                     <ProfileStats>
                         <Stat>
                             <Bold>{postsCount}</Bold>
-                            <StatName>Posts</StatName>
+                            <StatName>게시물</StatName>
                         </Stat>
                         <Stat>
                             <Bold>{followersCount}</Bold>
-                            <StatName>Followers</StatName>
+                            <StatName>팔로워</StatName>
                         </Stat>
                         <Stat>
                             <Bold>{followingCount}</Bold>
-                            <StatName>Following</StatName>
+                            <StatName>팔로잉</StatName>
                         </Stat>
                     </ProfileStats>
                     <FollowButtonContainer>
@@ -151,7 +170,7 @@ const UserProfile = ({
                             ? (<LogoutButton text="로그아웃" onPress={handleLogout} style={{ color: "#ED4956" }} />)
                             : (<FollowButton isFollowing={isFollowing} id={id} />)}
                     </FollowButtonContainer>
-                    <TouchableOpacity onPress={handleProfileImage}><Bio>ddd</Bio></TouchableOpacity>
+
 
                 </HeaderColumn>
             </ProfileHeader>

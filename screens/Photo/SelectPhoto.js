@@ -10,7 +10,7 @@ import { gql } from "apollo-boost";
 import styles from "../../styles";
 import { useMutation } from "react-apollo-hooks";
 
-const EDIT_AVATAR = gql`
+export const EDIT_AVATAR = gql`
     mutation editUser($avatar:String){
         editUser(avatar:$avatar){
             id
@@ -80,12 +80,12 @@ export default ({navigation}) => {
 
     };
 
-    const handleSelected = () => {
+    const handleSelected =() => {
         console.log(from);
         
         if(from =='profile'){
-            changeProfileImage();
-            // navigation.navigate("Upload", { photo: selected });
+             changeProfileImage();
+            navigation.navigate("profile");
         }else{
             navigation.navigate("Upload", { photo: selected });
         }
@@ -110,16 +110,15 @@ export default ({navigation}) => {
             });
             console.log('사진저장위치:',location);
             const {
-                data
+                data:{editUser}
             } = await uploadAvaterMutaion({
                 variables: {
                     avatar: location
                 }
             });
-            console.log("uploaddata",data);
-            // if (upload.id) {
-            //     navigation.navigate("TabNavigation");
-            // }
+            if (editUser.id) {
+                navigation.navigate("profile");
+            }
         } catch (e) {
             Alert.alert("업로드 할수 없습니다.", "나중에 다시 시도해주세요");
         }finally {

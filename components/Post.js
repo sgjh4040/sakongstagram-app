@@ -204,8 +204,7 @@ const Post = ({
                         <RowContainer>
                             <CommentInput
                                 {...commentInput}
-                                placeholder="comment"
-                                autoCapitalize="words"
+                                placeholder="댓글"
                             />
                             <AddButton loading={loading} onPress={handleComment} text="등록" />
                         </RowContainer>

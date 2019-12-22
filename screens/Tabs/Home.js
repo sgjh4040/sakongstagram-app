@@ -25,7 +25,7 @@ const View = styled.View`
 
 const Text = styled.Text``;
 
-export default () => {
+export default ({navigation}) => {
     const [refreshing, setRefreshing] = useState(false);
     const {loading, data, refetch} = useQuery(FEED_QUERY);
     const refresh = async () => {
@@ -39,7 +39,15 @@ export default () => {
         }
     };
     useEffect(() => {
-        refetch();
+        const refresh = navigation.addListener("didFocus",()=>{
+          console.log("didFocus");
+          refetch()
+        })
+        console.log('useEffect')
+        return ()=>{
+          refresh.remove();
+        }
+        
       }, [])
     return (
         <ScrollView
