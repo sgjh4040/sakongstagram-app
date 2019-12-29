@@ -6,7 +6,12 @@ import { stackStyles } from "./config";
 export default createStackNavigator(
     {
       Messages,
-      Message
+      Message:{
+        screen: Message,
+        navigationOptions:{
+          title: "채팅"
+        }
+      }
     },
     {
       defaultNavigationOptions: {

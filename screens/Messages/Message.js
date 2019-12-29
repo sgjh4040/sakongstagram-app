@@ -2,10 +2,11 @@ import React, { useState, useMemo, useEffect, Suspense } from "react";
 import styled from "styled-components";
 import gql from "graphql-tag";
 import { useQuery, useMutation, useSubscription } from "react-apollo-hooks";
-import { ScrollView, TextInput, KeyboardAvoidingView, ActivityIndicator } from "react-native";
+import { Image, ScrollView, TextInput, KeyboardAvoidingView, ActivityIndicator } from "react-native";
 import withSuspense from "../../components/withSuspense";
 import { getDateFormat, getYearMonth } from "../../util"
 import * as moment from "../../util"
+import constants from "../../constants"
 
 
 const ME = gql`
@@ -30,6 +31,8 @@ const SEE_ROOM = gql`
             createdAt
             from{
                 id
+                avatar
+                username
             }
             }
         }
@@ -47,6 +50,8 @@ const SEND_MESSAGE = gql`
             text
             from{
                 id
+                avatar
+                username
             }
         }
       }
@@ -60,6 +65,8 @@ const NEW_MESSAGE = gql`
             text
             from{
                 id
+                avatar
+                username
             }
         }
     
@@ -70,12 +77,36 @@ const NEW_MESSAGE = gql`
 const View = styled.View`
     
 `;
+const ColumnView = styled.View`
+    flex-direction: column
+`;
+const MessageContainer = styled.View`
+    flex-direction: row;
+    align-self: ${props => props.align};
+    align-items: flex-end;
+    
+`;
+
+const MessageBubble = styled.View`
+  background-color: white;
+  box-shadow:  0 5px 15px rgba(0, 0, 0, 0.15);
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  margin-right:10px;
+  max-width: ${constants.width / 1.3}
+`;
 
 const Text = styled.Text`
-    text-align:right;
 `;
-const Text1 = styled.Text`
-    text-align:left;
+const UserNameText = styled.Text`
+    margin-bottom: 3px;
+`;
+const DateText = styled.Text`
+    color:#7E8E9B;
+    margin-bottom: 10px;
+    font-size: 12px;
 `;
 
 
@@ -145,7 +176,7 @@ const Message = ({ roomid, toId }) => {
                 setMessages([...sendMessage.room.messages]);
             }
             setMessage("");
-            console.log("sendMessage",sendMessage);
+            console.log("sendMessage", sendMessage);
         } catch (e) {
             console.log(e);
         }
@@ -167,23 +198,47 @@ const Message = ({ roomid, toId }) => {
             }
         >
 
-            <KeyboardAvoidingView style={{ flex: 1 }} enabled behavior="padding">
+            <KeyboardAvoidingView style={{ flex: 1 }} enabled behavior="height" keyboardVerticalOffset="2">
                 <ScrollView
                     contentContainerStyle={{
-                        paddingVertical: 50,
+                        paddingVertical: 80,
                         flex: 1,
-                        justifyContent: "flex-end"
+                        justifyContent: "flex-end",
+                        alignItems: "center"
+
                     }}
                 >
 
                     {loading ? <Text></Text> : messages.map(m =>
-                        (m.from.id == me.id) ? (<View key={m.id} style={{ marginBottom: 10 }}>
-                            <Text>{m.text}/{moment.getDateFormat(m.createdAt)}</Text>
+                        (m.from.id == me.id) ? (
+                            <MessageContainer key={m.id} align={"flex-end"}>
+                                <DateText>
+                                    {moment.getDateFormat(m.createdAt)}
+                                </DateText>
+                                <MessageBubble align={"flex-end"}>
+                                    <Text>
+                                        {m.text}
+                                    </Text>
 
-                        </View>) : (
-                                <View key={m.id} style={{ marginBottom: 10 }}>
-                                    <Text1>{m.text}</Text1>
-                                </View>
+                                </MessageBubble>
+                            </MessageContainer>) : (
+                                <MessageContainer key={m.id} align={"flex-start"}>
+                                    <Image
+                                        style={{ height: 30, width: 30, borderRadius: 15, marginBottom: 25, marginRight: 10 }}
+                                        source={{ uri: m.from.avatar }}
+                                    />
+                                    <ColumnView>
+                                        <UserNameText>
+                                            {m.from.username}
+                                        </UserNameText>
+                                        <MessageBubble key={m.id} align={"flex-start"}>
+                                            <Text style={{ marginBottom: 5 }}>{m.text}</Text>
+                                        </MessageBubble>
+                                    </ColumnView>
+                                    <DateText>
+                                        {moment.getDateFormat(m.createdAt)}
+                                    </DateText>
+                                </MessageContainer>
                             )
                     )}
 
