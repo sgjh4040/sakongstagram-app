@@ -31,12 +31,25 @@ export const SEARCH = gql`
 `;
 const PostSection = styled.View`
     flex-direction: row;
-`;
-const UserSection = styled.View`
-    flex-direction: row;
-    min-height: 100px;
-`;
+    justify-content:center;
+    align-items:center;
+    flex-wrap: wrap;
 
+`;
+const Text = styled.Text`
+    font-size: 16px;
+    margin-bottom: 10px;
+    font-weight: 700;
+   
+`;
+const View = styled.View`
+    flex-direction: row;
+    align-items:center;
+    justify-content:center;
+    min-height: 100px;
+    width:100%;
+
+`;
 const SearchPresenter = ({ term, shouldFetch }) => {
     const [refreshing, setRefreshing] = useState(false);
     const { data, loading, refetch } = useQuery(SEARCH, {
@@ -61,28 +74,43 @@ const SearchPresenter = ({ term, shouldFetch }) => {
                 <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
             }
         >
-            <UserSection>
-                {loading ? (
-                    <></>
-                ) : (
-                        data &&
-                        data.searchUser &&
-                        data.searchUser.map(user => <UserCard
-                            key={user.id}
-                            username={user.username}
-                            isFollowing={user.isFollowing}
-                            avatar={user.avatar}
-                            isSelf={user.isSelf}
-                            id={user.id} />)
-                    )}
-            </UserSection>
+
+            {loading ? (
+                <></>
+            ) : (
+                    data &&
+                        data.searchUser ?
+                        data.searchUser.length == 0
+                            ? (
+                                <View>
+                                    <Text>해당되는 유저가 없습니다</Text>
+                                </View>
+                            )
+                            : (
+                                <ScrollView
+                                    horizontal={true}
+                                >
+                                    {data.searchUser.map(user => <UserCard
+                                        key={user.id}
+                                        username={user.username}
+                                        isFollowing={user.isFollowing}
+                                        avatar={user.avatar}
+                                        isSelf={user.isSelf}
+                                        id={user.id} />)}</ScrollView>)
+                        : <></>
+                )}
             <PostSection>
                 {loading ? (
                     <Loader />
                 ) : (
                         data &&
-                        data.searchPost &&
-                        data.searchPost.map(post => <SquarePhoto key={post.id} {...post} refetch={refetch} />)
+                            data.searchPost ?
+                            data.searchPost.length == 0
+                                ? <Text>해당되는 포스터가 없습니다</Text>
+                                : data.searchPost.map(post => <SquarePhoto
+                                    key={post.id}
+                                    {...post} refetch={refetch} />)
+                            : <></>
                     )}
             </PostSection>
         </ScrollView>

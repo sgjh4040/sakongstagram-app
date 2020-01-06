@@ -8,6 +8,7 @@ import constants from "../../constants";
 import { gql } from "apollo-boost";
 import {FEED_QUERY} from "../Tabs/Home";
 import { useMutation } from "react-apollo-hooks";
+import { ME } from "../Tabs/Profile";
 
 const UPLOAD = gql`
   mutation upload($caption: String!, $files: [String!]!, $location: String) {
@@ -61,7 +62,7 @@ export default ({navigation}) => {
     const locationInput = useInput("");
     const photo = navigation.getParam("photo");
     const [uploadMutation] = useMutation(UPLOAD, {
-        refetchQueries: () => [{ query: FEED_QUERY }]
+        refetchQueries: () => [{ query: FEED_QUERY },{query:ME}]
     });
     const handleSubmit = async () =>{
         if(captionInput.value === "" || locationInput.value === ""){

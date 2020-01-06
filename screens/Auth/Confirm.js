@@ -27,7 +27,8 @@ export default ({ navigation }) => {
   });
   const handleConfirm = async () => {
     const { value } = confirmInput;
-    if (value === "" || !value.includes(" ")) {
+    console.log(value);
+    if (value === "" || value.includes(" ")) {
       return Alert.alert("키를 입력하세요");
     }
     try {
@@ -52,7 +53,7 @@ export default ({ navigation }) => {
       <View>
         <AuthInput
           {...confirmInput}
-          placeholder="Secret"
+          placeholder="메일로 발송된 문자를 입력하세요"
           returnKeyType="send"
           onSubmitEditing={handleConfirm}
           autoCorrect={false}

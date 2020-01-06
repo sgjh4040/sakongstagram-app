@@ -23,10 +23,12 @@ import { setContext } from 'apollo-link-context';
 import { split } from 'apollo-link';
 import { getMainDefinition } from 'apollo-utilities';
 import { connectActionSheet, ActionSheetProvider } from '@expo/react-native-action-sheet'
+import variables from './variables';
 
 // Create an http link:
+console.log(variables);
 const httpLink = new createHttpLink({
-  uri: 'http://localhost:4000'
+  uri: variables.apiUrl
 });
 
 // Create a WebSocket link:

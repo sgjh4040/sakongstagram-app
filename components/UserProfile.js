@@ -76,6 +76,7 @@ const Button = styled.View`
 `;
 const PhotoContainer = styled.View`
     flex-direction: row;
+    flex-wrap: wrap;
 `;
 
 
@@ -92,7 +93,7 @@ const UserProfile = ({
     isFollowing,
     navigation
 }) => {
-    // console.log(navigation);
+    console.log(posts.length);
     const { showActionSheetWithOptions } = useActionSheet();
     const [isGrid, setIsGrid] = useState(true);
 
@@ -204,6 +205,7 @@ const UserProfile = ({
                         isGrid ? (
                             <SquarePhoto key={p.id} {...p} />
                         ) : (
+                                
                                 <Post key={p.id} {...p} />
                             )
                     )}

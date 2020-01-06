@@ -7,7 +7,8 @@ import { TouchableWithoutFeedback, Keyboard, Alert } from "react-native";
 import { useMutation } from "react-apollo-hooks";
 import { LOG_IN } from "./AuthQueries";
 import Signup from "./Signup";
-import {Image} from "react-native"
+import {Image} from "react-native";
+import logo from "../../assets/logo.png";
 
 const View = styled.View`
   justify-content: center;
@@ -63,8 +64,8 @@ export default ({navigation}) => {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View>
       <Image
-                    source={{uri:'/assets/logo.png'}}
-                    style={{height: 50, width: 50, borderRadius: 20,flex:1}}
+                    source={require('../../assets/logo.png')}
+                    style={{height: 250, width: 250}}
                 />
         <AuthInput
           {...emailInput}
@@ -74,7 +75,7 @@ export default ({navigation}) => {
           onSubmitEditing={handleLogin}
           autoCorrect={false}
         />
-        <AuthButton loading={loading} onPress={handleLogin} text="Log In" />
+        <AuthButton loading={loading} onPress={handleLogin} text="로그인" />
         <AuthButton onPress={handleToSign} text="회원가입" />
       </View>
     </TouchableWithoutFeedback>

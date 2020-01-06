@@ -22,11 +22,13 @@ export default ({ navigation }) => {
       const refresh = navigation.addListener("didFocus",()=>{
         console.log("didFocus")
         refetch()
-      })
+      });
+      refetch();
       console.log('useEffect')
       return ()=>{
         refresh.remove();
       }
+      
       
     }, [])
     return (

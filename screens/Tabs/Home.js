@@ -41,8 +41,9 @@ export default ({navigation}) => {
     useEffect(() => {
         const refresh = navigation.addListener("didFocus",()=>{
           console.log("didFocus");
-          refetch()
-        })
+          refetch();
+        });
+        refetch();
         console.log('useEffect')
         return ()=>{
           refresh.remove();

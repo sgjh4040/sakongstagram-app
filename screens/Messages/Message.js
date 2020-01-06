@@ -107,6 +107,8 @@ const DateText = styled.Text`
     color:#7E8E9B;
     margin-bottom: 10px;
     font-size: 12px;
+    margin-left: 10px;
+    margin-right: 10px;
 `;
 
 

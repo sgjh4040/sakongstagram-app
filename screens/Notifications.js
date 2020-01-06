@@ -32,6 +32,7 @@ const DELETE_NOTIFICATION = gql`
 `;
 
 const Container = styled.View`
+    padding:0 10px;
   
 `;
 const Touchable = styled.TouchableOpacity`
