@@ -82,7 +82,7 @@ const SearchPresenter = ({ term, shouldFetch }) => {
                         data.searchUser ?
                         data.searchUser.length == 0
                             ? (
-                                <View>
+                                <View style={{borderBottomWidth: 1, borderColor:'#DCDCDD'}}>
                                     <Text>해당되는 유저가 없습니다</Text>
                                 </View>
                             )
@@ -106,7 +106,7 @@ const SearchPresenter = ({ term, shouldFetch }) => {
                         data &&
                             data.searchPost ?
                             data.searchPost.length == 0
-                                ? <Text>해당되는 포스터가 없습니다</Text>
+                                ? <Text style={{marginTop:100}}>해당되는 포스터가 없습니다</Text>
                                 : data.searchPost.map(post => <SquarePhoto
                                     key={post.id}
                                     {...post} refetch={refetch} />)
